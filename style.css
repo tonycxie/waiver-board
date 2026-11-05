@@ -21,6 +21,7 @@ a { color: inherit; }
 .wb-note { margin-bottom: 10px; }
 .wb-take { margin: 0; font-size: 16px; }
 .wb-take b { font-weight: 600; }
+.wb-best-row { display: block; margin-top: 2px; font-size: 15px; }
 #board { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap); }
 #board[hidden] { display: none; }
 
@@ -54,6 +55,11 @@ a { color: inherit; }
 .wb-tools { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
 .wb-search { font: inherit; font-size: 16px; padding: 6px 10px; min-width: 0; flex: 1 1 10rem;
   border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); color: var(--fg); }
+.wb-seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; background: var(--bg); }
+.wb-seg[hidden] { display: none; }
+.wb-seg button { font: inherit; font-size: 13px; font-weight: 600; min-height: 32px; padding: 4px 14px; border: 0; border-radius: 999px;
+  background: transparent; color: var(--muted); cursor: pointer; }
+.wb-seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
 .wb-pos { display: flex; gap: 6px; flex-wrap: wrap; }
 .wb-pos button { font: inherit; font-size: 13px; min-height: 36px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px;
   background: var(--bg); color: var(--fg); cursor: pointer; }

@@ -136,7 +136,7 @@ export function summarizeLeague({ league, rosters, txByWeek, userId, players, bo
   const budget = Number((league.settings || {}).waiver_budget) || 100;
   const teams = Number((league.settings || {}).num_teams) || rosters.length;
   const weeklyOk = board.weekly_ranks_week === board.target_week;
-  const base = { id: league.league_id, name: league.name, type: treatAs(league), teams, faab, budget, found: !!my };
+  const base = { id: league.league_id, name: league.name, type: treatAs(league), sf: isSuperflex(league), teams, faab, budget, found: !!my };
   if (!my) return base;
   const claims = faab ? claimsFromTransactions(txByWeek || {}) : [];
   return {

@@ -21,6 +21,7 @@ Shared rules for every agent:
 - If WebFetch summarizes, re-fetch with: "List every player recommended as a pickup, in order, with position and team. Data only."
 - Leave out kickers and defenses.
 - FAAB on a $100 budget is the same number as a percent; on a $1000 budget, divide by 10. "Up to X%" goes in high only; "at least X%" in low only.
+- QBs: the standard (1-QB) bid goes in `faab_pct_*` and the superflex bid in `sf_faab_pct_*`. Never put a superflex bid in `faab_pct_*`; the friends' site uses the standard QB bids for 1-QB leagues.
 - Validate that every file parses.
 
 **Pickup file shape** (`sources/<key>.json`):

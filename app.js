@@ -1,4 +1,4 @@
-import { isSuperflex, isFaab, summarizeLeague, OFFENSE } from './logic.js';
+import { isFaab, summarizeLeague, OFFENSE } from './logic.js';
 
 const API = 'https://api.sleeper.app/v1';
 const $ = (id) => document.getElementById(id);
@@ -17,9 +17,9 @@ const store = {
 
 let BOARD = null;
 let PLAYERS = null;
-let LEAGUES = [];        // summaries from logic.js, superflex leagues only
+let LEAGUES = [];        // summaries from logic.js
 let SKIPPED = [];        // leagues left out, with the reason
-const ui = { league: 'all', pos: 'ALL', q: '', showTaken: false, sort: 'rank', dir: 1 };
+const ui = { league: 'all', fmt: 'sf', pos: 'ALL', q: '', showTaken: false, sort: 'rank', dir: 1 };
 
 async function getJSON(url) {
   const r = await fetch(url, { cache: 'no-store' });
@@ -50,10 +50,9 @@ async function loadUser(username) {
   const keep = [];
   for (const L of leagues || []) {
     if (L.status === 'pre_draft') SKIPPED.push({ name: L.name, why: 'not drafted yet' });
-    else if (!isSuperflex(L)) SKIPPED.push({ name: L.name, why: '1-QB' });
     else keep.push(L);
   }
-  status.textContent = `Loading ${keep.length} superflex league${keep.length === 1 ? '' : 's'}…`;
+  status.textContent = `Loading ${keep.length} league${keep.length === 1 ? '' : 's'}…`;
   LEAGUES = await Promise.all(keep.map(async (L) => {
     const weeks = isFaab(L) ? Array.from({ length: thruWeek }, (_, i) => i + 1) : [];
     const [rosters, ...tx] = await Promise.all([
@@ -76,7 +75,7 @@ async function loadUser(username) {
   ui.league = 'all';
   $('who').textContent = user.display_name || username;
   if (!LEAGUES.length) {
-    status.textContent = `${user.display_name || username} has no superflex leagues on Sleeper this season.`
+    status.textContent = `${user.display_name || username} has no active NFL leagues on Sleeper this season.`
       + (SKIPPED.length ? ` Skipped: ${SKIPPED.map((s) => `${s.name} (${s.why})`).join(', ')}.` : '');
     return;
   }
@@ -87,6 +86,11 @@ async function loadUser(username) {
 
 // ---------------------------------------------------------------- drawing
 const picked = () => LEAGUES.find((l) => l.key === ui.league) || null;
+// Superflex or 1-QB numbers: a league tab uses that league's format; "All leagues" uses the toggle (superflex by default).
+const viewSf = () => { const L = picked(); return L ? L.sf : ui.fmt === 'sf'; };
+const F = (sf) => (sf
+  ? { rank: 'rank', bid: 'faab', mid: 'faab_mid', basis: 'faab_basis', dyn: 'dyn_value' }
+  : { rank: 'rank_1qb', bid: 'faab_1qb', mid: 'faab_1qb_mid', basis: 'faab_1qb_basis', dyn: 'dyn_value_1qb' });
 
 function drawChips() {
   const box = $('league-filter');
@@ -106,7 +110,7 @@ function drawCards() {
     const c = el('button', `wb-card wb-kpi${l.key === ui.league ? ' is-picked' : ''}`);
     c.type = 'button';
     c.addEventListener('click', () => { ui.league = ui.league === l.key ? 'all' : l.key; draw(); });
-    c.append(el('span', 'wb-name', l.name), el('span', 'wb-type', `${l.type === 'dynasty' ? 'Dynasty' : 'Redraft'} · ${l.teams} teams`));
+    c.append(el('span', 'wb-name', l.name), el('span', 'wb-type', `${l.type === 'dynasty' ? 'Dynasty' : 'Redraft'} · ${l.sf ? 'Superflex' : '1-QB'} · ${l.teams} teams`));
     if (l.position) {
       c.append(el('span', 'wb-big', pct(l.position.myRemainingPct)), el('span', 'wb-line', `FAAB left of $${int(l.budget)}`),
         el('span', 'wb-line', `Richest rival: ${pct(l.position.maxOppRemainingPct)}`),
@@ -121,10 +125,21 @@ function drawCards() {
 }
 
 function bestOpen() {
-  const r = BOARD.pickups.find((p) => LEAGUES.some((l) => l.avail[p.sid] === 'Open'));
-  if (!r) { $('best').textContent = 'None of the listed pickups are open in your leagues.'; return; }
-  const where = LEAGUES.filter((l) => l.avail[r.sid] === 'Open').map((l) => l.name);
-  $('best').replaceChildren('Best pickup still open: ', el('b', null, r.player), el('span', 'wb-sub', ` ${r.pos}, ${r.team} · in ${where.join(', ')}`));
+  const box = $('best');
+  const lines = [];
+  for (const l of LEAGUES) {
+    const f = F(l.sf);
+    const r = BOARD.pickups.filter((p) => l.avail[p.sid] === 'Open').sort((a, b) => a[f.rank] - b[f.rank])[0];
+    if (r) lines.push([l, r, f]);
+  }
+  if (!lines.length) { box.textContent = 'None of the listed pickups are open in your leagues.'; return; }
+  box.replaceChildren(el('span', null, LEAGUES.length > 1 ? 'Best pickup still open in each league:' : 'Best pickup still open: '));
+  for (const [l, r, f] of lines) {
+    const row = el('span', LEAGUES.length > 1 ? 'wb-best-row' : null);
+    if (LEAGUES.length > 1) row.append(el('span', 'wb-sub', `${l.name}: `));
+    row.append(el('b', null, r.player), el('span', 'wb-sub', ` ${r.pos}, ${r.team}${r[f.bid] ? ` · ${r[f.bid]}` : ''}`));
+    box.append(row);
+  }
 }
 
 function medianFor(l, pos) {
@@ -134,16 +149,17 @@ function medianFor(l, pos) {
 
 function columns() {
   const L = picked();
+  const f = F(viewSf());
   const cols = [
-    { f: 'rank', label: '#', num: true, k: 'c-rank' },
+    { f: 'rank', label: '#', num: true, k: 'c-rank', get: (r) => r[f.rank] },
     { f: 'player', label: 'Player', k: 'c-player' },
     { f: 'pos', label: 'Pos', k: 'c-sub' },
     { f: 'team', label: 'Team', k: 'c-sub wb-narrow-hide' },
-    { f: 'faab', label: 'Bid', sort: 'faab_mid', k: 'c-faab' },
+    { f: 'bid', label: 'Bid', k: 'c-faab', get: (r) => r[f.bid], sortGet: (r) => r[f.mid], title: (r) => r[f.basis] },
   ];
   if (L) {
     if (L.faab) cols.push({ f: 'med', label: 'League median', num: true, k: 'c-med', get: (r) => medianFor(L, r.pos), fmt: pct });
-    if (L.type === 'dynasty') cols.push({ f: 'dyn_value', label: 'Dynasty', num: true, k: 'c-dyn', fmt: int });
+    if (L.type === 'dynasty') cols.push({ f: 'dyn', label: 'Dynasty', num: true, k: 'c-dyn', fmt: int, get: (r) => r[f.dyn] });
   } else {
     cols.push({ f: 'open', label: 'Leagues', k: 'c-lg', get: (r) => LEAGUES.filter((l) => l.avail[r.sid] === 'Open').length, pills: true });
   }
@@ -153,7 +169,8 @@ function columns() {
 function drawPickups() {
   const L = picked();
   const cols = columns();
-  const val = (r, key) => { const c = cols.find((x) => (x.sort || x.f) === key); return c && c.get ? c.get(r) : r[key]; };
+  const fr = F(viewSf()).rank;
+  const val = (r, key) => { const c = cols.find((x) => x.f === key); if (!c) return r[key]; return c.sortGet ? c.sortGet(r) : c.get ? c.get(r) : r[key]; };
   let list = BOARD.pickups.slice();
   $('taken-toggle').hidden = !L;
   if (L && !ui.showTaken) list = list.filter((r) => L.avail[r.sid] === 'Open');
@@ -172,7 +189,7 @@ function drawPickups() {
   if (ui.q) list = list.filter((r) => `${r.player} ${r.team} ${r.pos}`.toLowerCase().includes(ui.q));
   list.sort((a, b) => {
     const x = val(a, ui.sort), y = val(b, ui.sort);
-    if (x === y) return a.rank - b.rank;
+    if (x === y) return a[fr] - b[fr];
     if (x === null || x === undefined || x === '') return 1;
     if (y === null || y === undefined || y === '') return -1;
     const nx = Number(x), ny = Number(y);
@@ -182,13 +199,13 @@ function drawPickups() {
   const table = $('pickups-table');
   const head = el('tr');
   for (const c of cols) {
-    const key = c.sort || c.f;
+    const key = c.f;
     const th = el('th', `${c.num ? 'num ' : ''}${c.k.includes('wb-narrow-hide') ? 'wb-narrow-hide' : ''}`);
     th.setAttribute('aria-sort', ui.sort === key ? (ui.dir > 0 ? 'ascending' : 'descending') : 'none');
     const btn = el('button', null, c.label);
     btn.type = 'button';
     btn.addEventListener('click', () => {
-      if (ui.sort === key) ui.dir = -ui.dir; else { ui.sort = key; ui.dir = key === 'rank' || !(c.num || c.sort || c.pills) ? 1 : -1; }
+      if (ui.sort === key) ui.dir = -ui.dir; else { ui.sort = key; ui.dir = key === 'rank' || !(c.num || c.sortGet || c.pills) ? 1 : -1; }
       drawPickups();
     });
     th.append(btn);
@@ -212,7 +229,7 @@ function drawPickups() {
       } else {
         const v = c.get ? c.get(r) : r[c.f];
         td.textContent = c.fmt ? c.fmt(v) : (v ?? '');
-        if (c.f === 'faab' && r.faab_basis) td.title = r.faab_basis;
+        if (c.title && c.title(r)) td.title = c.title(r);
       }
       tr.append(td);
     }
@@ -220,6 +237,14 @@ function drawPickups() {
   }));
   $('pickups-empty').hidden = list.length > 0;
 
+  const sf = viewSf();
+  const tg = $('fmt-toggle');
+  tg.hidden = !!L;
+  for (const b of tg.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.fmt === ui.fmt));
+  const who = L ? `${L.name} is ${sf ? 'superflex' : '1-QB'}. ` : '';
+  $('pickups-note').textContent = sf
+    ? `${who}Ranked by how many outlets list a player and how high. Bid is % of total budget; QB bids are superflex bids.`
+    : `${who}1-QB rankings: QB bids are standard 1-QB bids, and QBs are ranked lower (they count about ${Math.round(100 * BOARD.qb_1qb_factor)}% as much as in superflex). Bid is % of total budget.`;
   const legend = $('pickups-legend');
   if (L) legend.textContent = ui.showTaken ? `All pickups for ${L.name}; rostered players are crossed out.` : `Open in ${L.name}, sorted by consensus.`;
   else {
@@ -317,6 +342,10 @@ function draw() {
 }
 
 // ---------------------------------------------------------------- wiring
+$('fmt-toggle').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-fmt]');
+  if (b) { ui.fmt = b.dataset.fmt; drawPickups(); }
+});
 $('search').addEventListener('input', (e) => { ui.q = e.target.value.trim().toLowerCase(); drawPickups(); });
 $('show-taken').addEventListener('change', (e) => { ui.showTaken = e.target.checked; drawPickups(); });
 $('user-form').addEventListener('submit', async (e) => {

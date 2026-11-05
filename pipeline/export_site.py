@@ -3,12 +3,17 @@
 Run after build.py. Writes two files that the site's page reads:
   <site>/data/board.json    week, run details, sources, and the consensus pickups (league-agnostic)
   <site>/data/players.json  every offensive player by Sleeper id: name, pos, team, ROS pos rank,
-                            weekly pos rank (only when it is for TARGET_WEEK), bye, dynasty value
+                            weekly pos rank (only when it is for TARGET_WEEK), bye, superflex and 1-QB dynasty values
+
+Each pickup carries superflex and 1-QB versions of its bid and rank. For QBs, the 1-QB bid is the median
+of outlets' standard bids (build.py's faab_inputs), and the 1-QB rank discounts QB consensus scores by the
+median ratio of DynastyProcess 1-QB to superflex QB values. RB/WR/TE are the same in both.
 
 Usage: SOURCE_WEEK=N TARGET_WEEK=N python3 -I export_site.py /home/claude/waiver-board
 Nothing league-specific (rosters, owner ids, Yahoo) is written: the page pulls that live from Sleeper.
 """
 import csv, json, os, re, sys
+from statistics import median
 from datetime import date, datetime, timezone
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -94,7 +99,8 @@ for p in sorted(ids, key=lambda r: r.get("db_season", ""), reverse=True):
     players[sid] = [p["name"], p["position"], DISPLAY_TEAM.get(p["team"], p["team"]),
                     round(num(ros["ecr"])) if ros and num(ros["ecr"]) else None,
                     round(wk) if wk else None, bye,
-                    int(num(v["value_2qb"])) if v and num(v["value_2qb"]) is not None else None]
+                    int(num(v["value_2qb"])) if v and num(v["value_2qb"]) is not None else None,
+                    int(num(v["value_1qb"])) if v and num(v["value_1qb"]) is not None else None]
 
 # ---------------------------------------------------------------- pickups (league-agnostic columns only)
 by_name = {}
@@ -112,10 +118,27 @@ def sid_for(name, pos, team):
 
 
 dash = os.path.join(ROOT, "out", "dashboard.json")
-sid_by_name = {}
+sid_by_name, qb1 = {}, {}
 if os.path.exists(dash):
     for r in json.load(open(dash)).get("players", []):
         sid_by_name[r["name"]] = r["sleeper_id"]
+        # build.py keeps each outlet's standard (1-QB) bids in faab_inputs, superflex bids in sf_faab_inputs
+        pool = [f for f in r.get("faab_inputs", []) if "faablab" not in (f.get("src") or "").lower()]
+        if r["pos"] == "QB" and pool:
+            qb1[r["name"]] = {"lo": median([f["lo"] for f in pool]), "hi": median([f["hi"] for f in pool]),
+                              "from": sorted({f["src"] for f in pool})}
+# Manual 1-QB QB bids (used when out/dashboard.json is missing, e.g. a rebuilt week)
+mq = os.path.join(ROOT, "out", "faab_1qb.json")
+if os.path.exists(mq):
+    for k, v in json.load(open(mq)).items():
+        qb1.setdefault(k, v)
+
+# 1-QB leagues value QBs far less. Discount each QB's consensus score by the typical ratio of
+# DynastyProcess 1-QB to superflex values (median over QBs with a superflex value of 200+).
+_qb_fp = {r["fantasypros_id"] for r in ids if r["position"] == "QB"}
+_ratios = [num(v["value_1qb"]) / num(v["value_2qb"]) for k, v in values.items()
+           if k in _qb_fp and num(v.get("value_2qb")) and num(v["value_2qb"]) >= 200 and num(v.get("value_1qb")) is not None]
+QB_1QB_FACTOR = round(median(_ratios), 3) if _ratios else 0.3
 KEEP = ["rank", "player", "pos", "team", "mentions", "score", "sources", "faab", "faab_mid", "faab_basis",
         "ros_pos_rank", "owned_pct", "bye", "dyn_value", "dyn_rank"]
 pickups, unmatched = [], []
@@ -125,7 +148,20 @@ for r in json.load(open(os.path.join(ROOT, "out", "pickups.json"))):
         unmatched.append(r["player"])
     row = {k: r.get(k) for k in KEEP}
     row["sid"] = sid
+    if r["pos"] == "QB":
+        q = qb1.get(r["player"])
+        row["faab_1qb"] = (f"{q['lo']:g}%" if q["lo"] == q["hi"] else f"{q['lo']:g}–{q['hi']:g}%") if q else None
+        row["faab_1qb_mid"] = round((q["lo"] + q["hi"]) / 2, 1) if q else None
+        row["faab_1qb_basis"] = f"1-QB bid ({', '.join(q['from'])})" if q else None
+        row["score_1qb"] = round((r.get("score") or 0) * QB_1QB_FACTOR, 3)
+    else:
+        row["faab_1qb"], row["faab_1qb_mid"], row["faab_1qb_basis"] = r.get("faab"), r.get("faab_mid"), r.get("faab_basis")
+        row["score_1qb"] = r.get("score") or 0
+    p1 = players.get(sid) if sid else None
+    row["dyn_value_1qb"] = p1[7] if p1 else None
     pickups.append(row)
+for i, row in enumerate(sorted(pickups, key=lambda x: (-x["score_1qb"], -(x["faab_1qb_mid"] or 0))), 1):
+    row["rank_1qb"] = i
 
 run = {}
 rp = os.path.join(ROOT, "out", "run.json")
@@ -145,12 +181,13 @@ board = {
     "ecr_date": ecr_date, "values_date": values_date,
     "weekly_ranks_week": TARGET_WEEK if weekly_from else None,
     "weekly_ranks_from": {"live": "FantasyPros live", "mirror": "DynastyProcess mirror"}.get(weekly_from),
-    "season": 2026, "season_start_ms": 1788220800000,
+    "season": 2026, "season_start_ms": 1788220800000, "qb_1qb_factor": QB_1QB_FACTOR,
     "sources": sources, "pickups": pickups,
 }
 os.makedirs(os.path.join(SITE, "data"), exist_ok=True)
 json.dump(board, open(os.path.join(SITE, "data", "board.json"), "w"), separators=(",", ":"))
-json.dump({"week": TARGET_WEEK, "fields": ["name", "pos", "team", "ros_pos_rank", "weekly_pos_rank", "bye", "dyn_value"],
+json.dump({"week": TARGET_WEEK, "fields": ["name", "pos", "team", "ros_pos_rank", "weekly_pos_rank", "bye", "dyn_value", "dyn_value_1qb"],
            "players": players}, open(os.path.join(SITE, "data", "players.json"), "w"), separators=(",", ":"))
-print(f"pickups={len(pickups)} unmatched={unmatched} players={len(players)} "
+print(f"pickups={len(pickups)} unmatched={unmatched} players={len(players)} qb_1qb_factor={QB_1QB_FACTOR} "
+      f"qb_1qb_bids={sum(1 for p in pickups if p['pos'] == 'QB' and p['faab_1qb'])}/{sum(1 for p in pickups if p['pos'] == 'QB')} "
       f"weekly={'from ' + weekly_from if weekly_from else 'skipped (mirror week ' + str(mirror_week) + ')'}")
