@@ -105,25 +105,6 @@ function drawChips() {
   $('skipped').textContent = SKIPPED.length ? `Not shown: ${SKIPPED.map((s) => `${s.name} (${s.why})`).join(', ')}.` : '';
 }
 
-function drawCards() {
-  $('cards').replaceChildren(...LEAGUES.map((l) => {
-    const c = el('button', `wb-card wb-kpi${l.key === ui.league ? ' is-picked' : ''}`);
-    c.type = 'button';
-    c.addEventListener('click', () => { ui.league = ui.league === l.key ? 'all' : l.key; draw(); });
-    c.append(el('span', 'wb-name', l.name), el('span', 'wb-type', `${l.type === 'dynasty' ? 'Dynasty' : 'Redraft'} · ${l.sf ? 'Superflex' : '1-QB'} · ${l.teams} teams`));
-    if (l.position) {
-      c.append(el('span', 'wb-big', pct(l.position.myRemainingPct)), el('span', 'wb-line', `FAAB left of $${int(l.budget)}`),
-        el('span', 'wb-line', `Richest rival: ${pct(l.position.maxOppRemainingPct)}`),
-        el('span', 'wb-line', `Teams with more FAAB: ${l.position.teamsWithMore}`));
-    } else {
-      c.append(el('span', 'wb-big', '—'), el('span', 'wb-line', 'Rolling waivers, no FAAB'));
-    }
-    const flags = l.needs.filter((n) => n.level !== 'ok').length;
-    c.append(el('span', `wb-line ${flags ? 'wb-flag-warn' : 'wb-flag-ok'}`, `Lineup flags: ${flags}`));
-    return c;
-  }));
-}
-
 function bestOpen() {
   const box = $('best');
   const lines = [];
@@ -334,7 +315,6 @@ function drawSources() {
 
 function draw() {
   drawChips();
-  drawCards();
   bestOpen();
   drawPickups();
   drawNeeds();
