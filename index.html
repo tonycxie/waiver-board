@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Superflex Waiver Board</title>
+<meta name="description" content="Consensus superflex waiver pickups and FAAB bids, checked against your Sleeper leagues.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wb">
+  <header class="wb-head">
+    <h1 class="wb-title">Superflex waiver board</h1>
+    <p class="wb-sub" id="week-line">Loading this week's board…</p>
+  </header>
+
+  <form class="wb-user" id="user-form">
+    <label for="username" class="wb-sub">Sleeper username</label>
+    <div class="wb-user-row">
+      <input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="e.g. txie96" required>
+      <button type="submit">Load my leagues</button>
+    </div>
+    <p class="wb-status" id="status" role="status" aria-live="polite"></p>
+  </form>
+
+  <div id="board" hidden>
+    <p class="wb-take" id="best"></p>
+    <p class="wb-sub">Leagues for <b id="who"></b>, live from Sleeper. Only superflex leagues are shown.</p>
+    <nav class="wb-chips" id="league-filter" aria-label="League"></nav>
+    <p class="wb-sub" id="skipped"></p>
+    <div class="wb-grid" id="cards"></div>
+
+    <section class="wb-card" id="pickups">
+      <h2>Consensus pickups</h2>
+      <p class="wb-note">Ranked by how many outlets list a player and how high. Bid is % of total budget; QB bids are superflex-specific.</p>
+      <div class="wb-tools">
+        <div class="wb-pos" id="pos-filter" role="group" aria-label="Position"></div>
+        <input class="wb-search" id="search" type="search" placeholder="Search player or team" aria-label="Search players">
+        <label class="wb-toggle" id="taken-toggle" hidden><input type="checkbox" id="show-taken"> Show taken</label>
+      </div>
+      <div class="wb-legend" id="pickups-legend"></div>
+      <div class="wb-scroll">
+        <table class="wb-table" id="pickups-table"><thead></thead><tbody></tbody></table>
+      </div>
+      <p class="wb-empty" id="pickups-empty" hidden>No listed pickups are open in this league.</p>
+    </section>
+
+    <div class="wb-two">
+      <section class="wb-card">
+        <h2>Lineup check</h2>
+        <p class="wb-note" id="needs-note"></p>
+        <div class="wb-scroll">
+          <table class="wb-table" id="needs-table">
+            <thead><tr><th>League</th><th>Pos</th><th>Status</th><th class="num">Ready</th><th class="num">Slots</th><th>Why</th></tr></thead>
+            <tbody></tbody></table>
+        </div>
+      </section>
+      <section class="wb-card">
+        <h2>What wins in your leagues</h2>
+        <p class="wb-note">Winning FAAB bids this season, as a percent of budget. Offseason and $0 claims are left out.</p>
+        <div class="wb-scroll">
+          <table class="wb-table" id="bidpos-table">
+            <thead><tr><th>League</th><th>Pos</th><th class="num">Claims</th><th>Median</th><th class="num">Max</th></tr></thead>
+            <tbody></tbody></table>
+        </div>
+        <p class="wb-empty" id="bidpos-empty" hidden>No paid claims yet.</p>
+      </section>
+    </div>
+
+    <section class="wb-card">
+      <h2>Biggest winning bids</h2>
+      <p class="wb-note">The largest claims this season in each league.</p>
+      <div class="wb-scroll">
+        <table class="wb-table" id="topbids-table">
+          <thead><tr><th>League</th><th>Player</th><th>Pos</th><th class="num">Bid</th><th class="num">Week</th><th>Yours</th></tr></thead>
+          <tbody></tbody></table>
+      </div>
+      <p class="wb-empty" id="topbids-empty" hidden>No paid claims yet.</p>
+    </section>
+  </div>
+
+  <section class="wb-card">
+    <h2>Sources this week</h2>
+    <p class="wb-note">Rest-of-season ranks, byes and dynasty values come from FantasyPros via DynastyProcess. Rosters and bids come straight from Sleeper when you load.</p>
+    <div class="wb-scroll">
+      <table class="wb-table" id="sources-table">
+        <thead><tr><th>Source</th><th>Used for</th><th>Status</th><th class="num">Players</th></tr></thead>
+        <tbody></tbody></table>
+    </div>
+  </section>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
