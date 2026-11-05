@@ -10,3 +10,6 @@ Type a Sleeper username and see this week's consensus waiver pickups, with FAAB 
 - `logic.js` holds the league math (availability, FAAB vs. rivals, lineup check, winning-bid history). It's a port of the league half of `build.py`.
 
 No logins and no stored data. The page remembers the last username in your own browser only.
+
+## Changing the site code
+Phones cache files for a while. When you change `app.js`, `logic.js` or `style.css`, bump the `?v=` number on all three references (two in `index.html`, one import in `app.js`) so browsers fetch the new files.

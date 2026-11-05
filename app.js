@@ -1,4 +1,4 @@
-import { isFaab, summarizeLeague, OFFENSE } from './logic.js';
+import { isFaab, summarizeLeague, OFFENSE } from './logic.js?v=4';
 
 const API = 'https://api.sleeper.app/v1';
 const $ = (id) => document.getElementById(id);
