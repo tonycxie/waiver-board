@@ -35,11 +35,25 @@ function flexShare(rp) {
   return { need, slots, nflex: c.FLEX };
 }
 
-// Lineup check: a player is startable if his rest-of-season positional rank is inside the league's
-// starter range. Byes in the target week are subtracted, and so are players missing from this week's
+// Sleeper injury designations (sync/injuries.json). Out-type ones mean the player can't start this week;
+// Questionable is shown but still counts as ready. Same lists as build.py.
+export const OUT_STATUSES = ['Out', 'Doubtful', 'IR', 'PUP', 'Sus', 'NA', 'DNR', 'COV'];
+export function injuryOf(injuries, sid) {
+  const i = injuries && injuries[sid];
+  if (!i) return [null, null];
+  if (OUT_STATUSES.includes(i.injury_status)) return ['out', i.injury_status];
+  if (i.status === 'Practice Squad') return ['out', 'practice squad'];
+  if (i.injury_status === 'Questionable') return ['questionable', 'Q'];
+  return [null, null];
+}
+
+// Lineup check (build.py roster_needs). A player is startable if his rest-of-season positional rank is
+// inside the league's starter range. Of those, a player isn't ready this week if he is (in this order):
+// on a bye, in an IR or taxi slot, designated Out/Doubtful/IR/PUP/suspended, or missing from this week's
 // rankings (only when the weekly ranks are for the target week).
-export function rosterNeeds({ rosterPositions, teams, myPlayers, players, targetWeek, weeklyOk }) {
+export function rosterNeeds({ rosterPositions, teams, myPlayers, players, targetWeek, weeklyOk, stashed = [], injuries = {} }) {
   const { need, slots, nflex } = flexShare(rosterPositions);
+  const inSlot = new Set(stashed);
   const out = [];
   let flexSurplus = 0;
   for (const pos of OFFENSE) {
@@ -48,24 +62,30 @@ export function rosterNeeds({ rosterPositions, teams, myPlayers, players, target
     for (const sid of myPlayers) {
       const p = players[sid];
       if (!p || p[P.pos] !== pos) continue;
-      group.push({ name: p[P.name], ros: p[P.ros], weekly: p[P.weekly], bye: p[P.bye] });
+      group.push({ sid, name: p[P.name], ros: p[P.ros], weekly: p[P.weekly], bye: p[P.bye] });
     }
     const startable = group.filter((g) => g.ros !== null && g.ros !== undefined && g.ros <= thresh);
-    const onBye = startable.filter((g) => g.bye === targetWeek).map((g) => g.name);
-    const maybeOut = weeklyOk
-      ? startable.filter((g) => (g.weekly === null || g.weekly === undefined) && g.bye !== targetWeek).map((g) => g.name)
-      : [];
-    const avail = startable.length - onBye.length - maybeOut.length;
+    const onBye = [], slot = [], injured = [], questionable = [], maybeOut = [];
+    for (const g of startable) {
+      const [kind, label] = injuryOf(injuries, g.sid);
+      if (g.bye === targetWeek) onBye.push(g.name);
+      else if (inSlot.has(g.sid)) slot.push(g.name);
+      else if (kind === 'out') injured.push(`${g.name} (${label})`);
+      else if (weeklyOk && (g.weekly === null || g.weekly === undefined)) maybeOut.push(g.name);
+      else if (kind === 'questionable') questionable.push(g.name);
+    }
+    const avail = startable.length - onBye.length - slot.length - injured.length - maybeOut.length;
     const req = slots[pos];
     let level = 'ok';
     if (avail < req) level = 'need';
     else if (avail === req || (pos !== 'QB' && avail < req + 1)) level = 'thin';
     if (pos !== 'QB') flexSurplus += Math.max(0, avail - req);
-    out.push({ pos, level, startable: startable.length, ready: avail, slots: req, onBye, maybeOut, threshold: Math.round(thresh) });
+    out.push({ pos, level, startable: startable.length, ready: avail, slots: req, onBye, inSlot: slot, injured,
+      questionable, maybeOut, threshold: Math.round(thresh) });
   }
   if (flexSurplus < nflex) {
     out.push({ pos: 'FLEX', level: flexSurplus < nflex - 1 ? 'need' : 'thin', startable: flexSurplus, ready: flexSurplus,
-      slots: nflex, onBye: [], maybeOut: [], threshold: null });
+      slots: nflex, onBye: [], inSlot: [], injured: [], questionable: [], maybeOut: [], threshold: null });
   }
   return out;
 }
@@ -146,7 +166,7 @@ export function availability(sid, rosters, myRosterId) {
 }
 
 // Everything the page shows for one league.
-export function summarizeLeague({ league, rosters, txByWeek, userId, players, board }) {
+export function summarizeLeague({ league, rosters, txByWeek, userId, players, board, injuries = {} }) {
   const my = findMyRoster(rosters, userId);
   const faab = isFaab(league);
   const budget = Number((league.settings || {}).waiver_budget) || 100;
@@ -160,7 +180,7 @@ export function summarizeLeague({ league, rosters, txByWeek, userId, players, bo
     myRosterId: my.roster_id,
     position: faab ? faabPosition(rosters, my.roster_id, budget) : null,
     needs: rosterNeeds({ rosterPositions: league.roster_positions || [], teams, myPlayers: my.players || [], players,
-      targetWeek: board.target_week, weeklyOk }),
+      targetWeek: board.target_week, weeklyOk, stashed: [...(my.reserve || []), ...(my.taxi || [])], injuries }),
     bids: faab ? bidHistory({ claims, budget, myRosterId: my.roster_id, players, seasonStartMs: board.season_start_ms }) : null,
     avail: Object.fromEntries(board.pickups.filter((p) => p.sid).map((p) => [p.sid, availability(p.sid, rosters, my.roster_id)])),
   };

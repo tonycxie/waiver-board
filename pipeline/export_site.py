@@ -97,7 +97,8 @@ for p in sorted(ids, key=lambda r: r.get("db_season", ""), reverse=True):
                 bye = int(num(r["bye"]))
                 break
     players[sid] = [p["name"], p["position"], DISPLAY_TEAM.get(p["team"], p["team"]),
-                    round(num(ros["ecr"])) if ros and num(ros["ecr"]) else None,
+                    # one decimal: the lineup check compares it to a fractional starter cutoff, as build.py does
+                    round(num(ros["ecr"]), 1) if ros and num(ros["ecr"]) else None,
                     round(wk) if wk else None, bye,
                     int(num(v["value_2qb"])) if v and num(v["value_2qb"]) is not None else None,
                     int(num(v["value_1qb"])) if v and num(v["value_1qb"]) is not None else None]

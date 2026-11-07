@@ -1,4 +1,4 @@
-import { isFaab, summarizeLeague, leagueBid, fmtBid, OFFENSE } from './logic.js?v=5';
+import { isFaab, summarizeLeague, leagueBid, fmtBid, OFFENSE } from './logic.js?v=6';
 
 const API = 'https://api.sleeper.app/v1';
 const $ = (id) => document.getElementById(id);
@@ -17,6 +17,7 @@ const store = {
 
 let BOARD = null;
 let PLAYERS = null;
+let INJ = { players: {}, fetched_at: null };  // Sleeper injury designations from the sync (same origin)
 let LEAGUES = [];        // summaries from logic.js
 let SKIPPED = [];        // leagues left out, with the reason
 const ui = { league: 'all', fmt: 'sf', pos: 'ALL', q: '', showTaken: false, sort: 'rank', dir: 1 };
@@ -30,6 +31,11 @@ async function getJSON(url) {
 async function loadBoard() {
   [BOARD, PLAYERS] = await Promise.all([getJSON('data/board.json'), getJSON('data/players.json')]);
   PLAYERS = PLAYERS.players;
+  try {
+    const inj = await getJSON('sync/injuries.json');
+    // only when fresh (the sync runs twice a day; allow two days of slack)
+    if (inj && inj.fetched_at && Date.now() - Date.parse(inj.fetched_at) < 48 * 3600e3) INJ = inj;
+  } catch { /* no injury check */ }
   $('week-line').textContent = `Week ${BOARD.source_week} waiver columns from ${BOARD.sources_used ?? '—'} of ${BOARD.sources_total} outlets. Updated ${BOARD.generated}.`;
   drawSources();
 }
@@ -60,7 +66,7 @@ async function loadUser(username) {
       ...weeks.map((w) => getJSON(`${API}/league/${L.league_id}/transactions/${w}`).catch(() => [])),
     ]);
     const txByWeek = Object.fromEntries(weeks.map((w, i) => [w, tx[i]]));
-    return summarizeLeague({ league: L, rosters, txByWeek, userId: user.user_id, players: PLAYERS, board: BOARD });
+    return summarizeLeague({ league: L, rosters, txByWeek, userId: user.user_id, players: PLAYERS, board: BOARD, injuries: INJ.players });
   }));
   LEAGUES = LEAGUES.filter((l) => l.found);
   LEAGUES.forEach((l, i) => { l.key = `L${i}`; });
@@ -265,8 +271,11 @@ function fill(id, rows, cells) {
 
 function drawNeeds() {
   const weeklyOk = BOARD.weekly_ranks_week === BOARD.target_week;
-  $('needs-note').textContent = `Starters ranked inside your league's starter range rest of season, minus Week ${BOARD.target_week} byes`
-    + (weeklyOk ? ' and players missing from this week\'s rankings.' : '. (This week\'s rankings weren\'t available, so injuries aren\'t checked.)')
+  const injAt = INJ.fetched_at ? new Date(INJ.fetched_at).toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' }) : null;
+  $('needs-note').textContent = `Starters ranked inside your league's starter range rest of season, minus Week ${BOARD.target_week} byes, IR and taxi slots`
+    + (injAt ? `, and players Sleeper lists as Out, Doubtful, IR or PUP (as of ${injAt})` : '')
+    + (weeklyOk ? ', and players missing from this week\'s rankings.' : '.')
+    + (injAt ? '' : ' Sleeper\'s injury report wasn\'t available, so injuries aren\'t checked.')
     + ' Need means a slot you can\'t fill; thin means no backup.';
   const rows = [];
   for (const l of LEAGUES) {
@@ -283,7 +292,10 @@ function drawNeeds() {
     { draw: (td, r) => {
       const d = [];
       if (r.onBye.length) d.push(`Week ${BOARD.target_week} bye: ${r.onBye.join(', ')}`);
+      if (r.inSlot && r.inSlot.length) d.push(`In IR/taxi slot: ${r.inSlot.join(', ')}`);
+      if (r.injured && r.injured.length) d.push(`Out: ${r.injured.join(', ')}`);
       if (r.maybeOut.length) d.push(`Not ranked this week: ${r.maybeOut.join(', ')}`);
+      if (r.questionable && r.questionable.length) d.push(`Questionable: ${r.questionable.join(', ')}`);
       td.textContent = d.join('; ');
     } },
   ]);

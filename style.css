@@ -118,3 +118,6 @@ td.c-sub { color: var(--muted); white-space: nowrap; }
   #pickups-table td.c-dyn:empty { display: none; }
   .wb-search { flex-basis: 100%; }
 }
+
+.wb-credit { color: var(--muted); font-size: 12px; text-align: center; padding: 8px 0 0; }
+.wb-credit a { color: inherit; }

@@ -6,6 +6,7 @@ Inputs (all optional except player DB; missing pieces are reported, not fatal):
   faab/*.json          FAAB bid estimates (RotoBaller, Fantasy Squawk, Dynasty Nerds, Faablab)
   data/sleeper_*.json  league rosters (from the Sleeper API)
   data/sleeper_bids.json  completed waiver claims with winning bids
+  data/sleeper_injuries.json  Sleeper injury designations (sync/injuries.json), used if under 48 h old
   DynastyProcess repo: db_playerids.csv, db_fpecr_latest.csv, values-players.csv
 Output:
   out/dashboard.json
@@ -294,6 +295,37 @@ for key, fn in LEAGUE_FILES:
         L["key"] = key
         leagues.append(L)
 
+# Injury designations from the Sleeper sync (sync/injuries.json, copied to data/sleeper_injuries.json).
+# Used only when under 48 hours old. Out-type designations mean the player can't start this week;
+# Questionable is shown but still counts as ready.
+OUT_STATUSES = {"Out", "Doubtful", "IR", "PUP", "Sus", "NA", "DNR", "COV"}
+INJURIES, INJURIES_AT = {}, None
+_ip = os.path.join(ROOT, "data", "sleeper_injuries.json")
+if os.path.exists(_ip):
+    _d = json.load(open(_ip))
+    try:
+        _age_h = (datetime.now(timezone.utc) - datetime.fromisoformat(_d["fetched_at"])).total_seconds() / 3600
+    except (KeyError, ValueError):
+        _age_h = 1e9
+    if _age_h <= 48:
+        INJURIES, INJURIES_AT = _d.get("players", {}), _d["fetched_at"]
+
+
+def injury_of(sid):
+    """("out" | "questionable" | None, label) from the Sleeper designation."""
+    i = INJURIES.get(sid)
+    if not i:
+        return None, None
+    inj = i.get("injury_status")
+    if inj in OUT_STATUSES:
+        return "out", inj
+    if i.get("status") == "Practice Squad":
+        return "out", "practice squad"
+    if inj == "Questionable":
+        return "questionable", "Q"
+    return None, None
+
+
 bids = {}
 bp = os.path.join(ROOT, "data", "sleeper_bids.json")
 if os.path.exists(bp):
@@ -312,8 +344,14 @@ def flex_share(L):
 
 
 def roster_needs(L):
+    """Lineup check. A player is startable if his rest-of-season positional rank is inside the league's
+    starter range. Of those, a player isn't ready this week if he is (in this order): on a bye, in an IR or
+    taxi slot, designated Out/Doubtful/IR/PUP/suspended in Sleeper, or missing from this week's rankings
+    (only when the weekly ranks are for TARGET_WEEK). logic.js rosterNeeds() is the same function."""
     need, slots, nflex = flex_share(L)
-    mine = L["rosters"][str(L["my_roster_id"])]["players"]
+    R = L["rosters"][str(L["my_roster_id"])]
+    mine = R["players"]
+    stashed = set(R.get("reserve") or []) | set(R.get("taxi") or [])
     out = []
     flex_surplus = 0
     for pos in ("QB", "RB", "WR", "TE"):
@@ -323,15 +361,24 @@ def roster_needs(L):
             p = by_sleeper.get(sid)
             if not p or p["position"] != pos:
                 continue
-            r = ros_pos_rank(p)
-            wk = weekly_pos_rank(p)
-            bye = bye_week(p)
-            group.append({"name": p["name"], "ros": r, "weekly": wk, "bye": bye})
+            group.append({"sid": sid, "name": p["name"], "ros": ros_pos_rank(p), "weekly": weekly_pos_rank(p),
+                          "bye": bye_week(p)})
         startable = [g for g in group if g["ros"] is not None and g["ros"] <= thresh]
-        on_bye = [g["name"] for g in startable if g["bye"] == TARGET_WEEK]
-        # in ROS startable range but missing from this week's rankings and not on a bye this week
-        maybe_out = [g["name"] for g in startable if g["weekly"] is None and g["bye"] != TARGET_WEEK]
-        avail = len(startable) - len(on_bye) - len(maybe_out)
+        on_bye, slot, injured, questionable, maybe_out = [], [], [], [], []
+        for g in startable:
+            kind, label = injury_of(g["sid"])
+            if g["bye"] == TARGET_WEEK:
+                on_bye.append(g["name"])
+            elif g["sid"] in stashed:
+                slot.append(g["name"])
+            elif kind == "out":
+                injured.append(f"{g['name']} ({label})")
+            elif g["weekly"] is None:
+                # in ROS startable range but missing from this week's rankings
+                maybe_out.append(g["name"])
+            elif kind == "questionable":
+                questionable.append(g["name"])
+        avail = len(startable) - len(on_bye) - len(slot) - len(injured) - len(maybe_out)
         req = slots[pos]
         if avail < req:
             level = "need"
@@ -341,12 +388,13 @@ def roster_needs(L):
             level = "ok"
         flex_surplus += max(0, avail - req) if pos != "QB" else 0
         out.append({"pos": pos, "level": level, "startable": len(startable), "available_next_week": avail,
-                    "slots": req, "on_bye": on_bye, "maybe_out": maybe_out,
-                    "threshold": round(thresh)})
+                    "slots": req, "on_bye": on_bye, "in_slot": slot, "injured": injured,
+                    "questionable": questionable, "maybe_out": maybe_out, "threshold": round(thresh)})
     if flex_surplus < nflex:
         out.append({"pos": "FLEX", "level": "need" if flex_surplus < nflex - 1 else "thin",
                     "startable": flex_surplus, "available_next_week": flex_surplus, "slots": nflex,
-                    "on_bye": [], "maybe_out": [], "threshold": None})
+                    "on_bye": [], "in_slot": [], "injured": [], "questionable": [], "maybe_out": [],
+                    "threshold": None})
     return out
 
 
@@ -551,8 +599,14 @@ for L in league_out:
         detail = []
         if n["on_bye"]:
             detail.append(f"Week {TARGET_WEEK} bye: " + ", ".join(n["on_bye"]))
+        if n.get("in_slot"):
+            detail.append("In IR/taxi slot: " + ", ".join(n["in_slot"]))
+        if n.get("injured"):
+            detail.append("Out: " + ", ".join(n["injured"]))
         if n["maybe_out"]:
             detail.append("Not ranked this week: " + ", ".join(n["maybe_out"]))
+        if n.get("questionable"):
+            detail.append("Questionable: " + ", ".join(n["questionable"]))
         ds_needs.append({"id": f"{L['key']}-{n['pos']}", "league": L["key"], "name": SHORT.get(L["key"], L["name"]),
                          "pos": n["pos"], "level": {"need": "Need", "thin": "Thin", "ok": "OK"}[n["level"]],
                          "ready": n["available_next_week"],
@@ -587,6 +641,9 @@ if yahoo:
     ds_sources.append({"source": "Yahoo league pages", "role": "Rosters, FAAB & winning bids",
                        "status": (f"Stale (Week {yw[0]} data)" if yw[0] else "Stale (last MacBook run)") if stale else "Loaded",
                        "players": None, "week": yw[-1], "url": "https://football.fantasysports.yahoo.com"})
+ds_sources.append({"source": "Sleeper injury report", "role": "Lineup check: Out, IR, Questionable",
+                   "status": "Loaded" if INJURIES_AT else "Not run", "players": len(INJURIES) or None,
+                   "week": None, "url": "https://sleeper.com"})
 ds_sources.append({"source": "DynastyProcess / FantasyPros ECR", "role": "Ranks, byes, dynasty values",
                    "status": "Loaded", "players": None, "week": None, "url": "https://github.com/dynastyprocess/data"})
 
@@ -595,13 +652,15 @@ ds_run = [{"source_week": SOURCE_WEEK, "target_week": TARGET_WEEK,
            "sources_used": len(ok_sources), "sources_total": len(SOURCE_ORDER),
            "ecr_date": ecr_date, "values_date": values_date,
            "dynasty_leagues": ", ".join(SHORT.get(k, k) for k in dyn_keys),
-           "weekly_ranks": WEEKLY_SOURCE or f"stale (mirror is week {MIRROR_WEEKLY_WEEK}); injury check skipped",
+           "weekly_ranks": WEEKLY_SOURCE or f"stale (mirror is week {MIRROR_WEEKLY_WEEK}); not-ranked check skipped",
+           "injuries": f"Sleeper, {INJURIES_AT}" if INJURIES_AT else "none (sync missing or over 48 h old)",
            "league_keys": ",".join(league_keys)}]
 
 for name, data in (("pickups", ds_pickups), ("leagues", ds_leagues), ("needs", ds_needs),
                    ("bid_by_pos", ds_bidpos), ("top_bids", ds_topbids), ("sources", ds_sources), ("run", ds_run)):
     json.dump(data, open(os.path.join(ROOT, "out", f"{name}.json"), "w"), indent=1)
 print(f"weekly ranks: {WEEKLY_SOURCE or 'STALE mirror week ' + str(MIRROR_WEEKLY_WEEK)}")
+print(f"injuries: {len(INJURIES)} flagged, from {INJURIES_AT or 'NOT LOADED'}")
 print(f"players={len(rows)} sources_ok={len(ok_sources)}/12 leagues={len(leagues)} bids={'yes' if bids else 'no'}")
 for s in source_meta:
     print(f"  {s['source']:<24} {s.get('status')!s:<11} n={s['count']:<3} unmatched={s.get('unmatched', [])[:5]}")
