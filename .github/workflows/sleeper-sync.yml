@@ -2,7 +2,7 @@ name: Sleeper sync
 
 # Pulls exact Sleeper JSON (rosters, FAAB, winning bids, trending adds, injuries) into sync/ so the
 # weekly waiver run can read it with git instead of WebFetch. Times are UTC: 13:20 is 5:20 AM Pacific,
-# 01:20 is 5:20 PM Pacific, and 18:20 Tuesday is 10:20 AM Pacific, just before the Tuesday ~10:50 AM run.
+# 01:20 is 5:20 PM Pacific, and 18:20 Tuesday is 10:20 AM Pacific, just before the Tuesday 10:35 AM waiver run.
 # (Pacific Standard Time; during daylight time each runs an hour later.)
 on:
   schedule:
