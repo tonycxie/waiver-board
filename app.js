@@ -1,4 +1,4 @@
-import { isFaab, summarizeLeague, leagueBid, fmtBid, OFFENSE } from './logic.js?v=6';
+import { isFaab, summarizeLeague, leagueBid, fmtBid, upLabel, OFFENSE } from './logic.js?v=7';
 
 const API = 'https://api.sleeper.app/v1';
 const $ = (id) => document.getElementById(id);
@@ -20,7 +20,7 @@ let PLAYERS = null;
 let INJ = { players: {}, fetched_at: null };  // Sleeper injury designations from the sync (same origin)
 let LEAGUES = [];        // summaries from logic.js
 let SKIPPED = [];        // leagues left out, with the reason
-const ui = { league: 'all', fmt: 'sf', pos: 'ALL', q: '', showTaken: false, sort: 'rank', dir: 1 };
+const ui = { league: 'all', fmt: 'sf', pos: 'ALL', q: '', showTaken: false, showDeep: false, sort: 'rank', dir: 1 };
 
 async function getJSON(url) {
   const r = await fetch(url, { cache: 'no-store' });
@@ -115,9 +115,12 @@ function drawChips() {
 function bid(r, L, sf) {
   const f = F(sf);
   const inputs = sf ? r.faab_in : r.faab_in_1qb;
-  if (L && L.faab && L.position && inputs && inputs.length) {
-    const b = leagueBid(inputs, L.position.myRemaining / L.position.budget, L.position.myRemainingPct);
+  const est = sf ? r.faab_est : r.faab_est_1qb;
+  if (L && L.faab && L.position && ((inputs && inputs.length) || est)) {
+    const mult = (L.calib && L.calib.mult) || 1;
+    const b = leagueBid(inputs, L.position.myRemaining / L.position.budget, L.position.myRemainingPct, mult, est);
     const why = `${r[f.basis] || 'Published FAAB'}. Scaled to your ${pct(L.position.myRemainingPct)} left`
+      + (mult !== 1 ? `, x${mult} for what this league pays` : '')
       + (b.capped ? ', capped at what you have.' : '.');
     return { txt: fmtBid(b), mid: b.mid, title: why };
   }
@@ -129,7 +132,8 @@ function bestOpen() {
   const lines = [];
   for (const l of LEAGUES) {
     const f = F(l.sf);
-    const r = BOARD.pickups.filter((p) => l.avail[p.sid] === 'Open').sort((a, b) => a[f.rank] - b[f.rank])[0];
+    const r = BOARD.pickups.filter((p) => l.avail[p.sid] === 'Open' && l.fy[p.sid] && !p.deep)
+      .sort((a, b) => l.fy[a.sid].rank - l.fy[b.sid].rank)[0];
     if (r) lines.push([l, r, f]);
   }
   if (!lines.length) { box.textContent = 'None of the listed pickups are open in your leagues.'; return; }
@@ -152,14 +156,17 @@ function columns() {
   const L = picked();
   const f = F(viewSf());
   const cols = [
-    { f: 'rank', label: '#', num: true, k: 'c-rank', get: (r) => r[f.rank] },
+    { f: 'rank', label: L ? 'For you' : '#', num: true, k: 'c-rank', get: (r) => (L ? (L.fy[r.sid] || {}).rank : r[f.rank]) },
     { f: 'player', label: 'Player', k: 'c-player' },
     { f: 'pos', label: 'Pos', k: 'c-sub' },
     { f: 'team', label: 'Team', k: 'c-sub wb-narrow-hide' },
+    { f: 'ros', label: 'ROS', k: 'c-ros', title: () => 'FantasyPros rest-of-season positional rank', sortGet: (r) => r.ros_pos_rank },
+    { f: 'heat', label: 'Heat', num: true, k: 'c-heat', heat: true, title: (r) => r.heat_label },
     { f: 'bid', label: L && L.faab ? 'Your bid' : 'Bid', k: 'c-faab', get: (r) => bid(r, L, viewSf()).txt,
       sortGet: (r) => bid(r, L, viewSf()).mid, title: (r) => bid(r, L, viewSf()).title },
   ];
   if (L) {
+    cols.push({ f: 'up', label: 'Upgrade', k: 'c-up', get: (r) => upLabel(L.fy[r.sid]), sortGet: (r) => (L.fy[r.sid] || {}).gain });
     if (L.faab) cols.push({ f: 'med', label: 'League median', num: true, k: 'c-med', get: (r) => medianFor(L, r.pos), fmt: pct });
     if (L.type === 'dynasty') cols.push({ f: 'dyn', label: 'Dynasty', num: true, k: 'c-dyn', fmt: int, get: (r) => r[f.dyn] });
   } else {
@@ -176,6 +183,9 @@ function drawPickups() {
   let list = BOARD.pickups.slice();
   $('taken-toggle').hidden = !L;
   if (L && !ui.showTaken) list = list.filter((r) => L.avail[r.sid] === 'Open');
+  const nDeep = list.filter((r) => r.deep).length;
+  if (!ui.showDeep) list = list.filter((r) => !r.deep);
+  $('deep-count').textContent = String(nDeep);
   // position chips with counts
   const counts = { ALL: list.length };
   for (const r of list) counts[r.pos] = (counts[r.pos] || 0) + 1;
@@ -191,7 +201,7 @@ function drawPickups() {
   if (ui.q) list = list.filter((r) => `${r.player} ${r.team} ${r.pos}`.toLowerCase().includes(ui.q));
   list.sort((a, b) => {
     const x = val(a, ui.sort), y = val(b, ui.sort);
-    if (x === y) return a[fr] - b[fr];
+    if (x === y) return (L ? (L.fy[a.sid] || {}).rank - (L.fy[b.sid] || {}).rank : a[fr] - b[fr]);
     if (x === null || x === undefined || x === '') return 1;
     if (y === null || y === undefined || y === '') return -1;
     const nx = Number(x), ny = Number(y);
@@ -207,7 +217,7 @@ function drawPickups() {
     const btn = el('button', null, c.label);
     btn.type = 'button';
     btn.addEventListener('click', () => {
-      if (ui.sort === key) ui.dir = -ui.dir; else { ui.sort = key; ui.dir = key === 'rank' || !(c.num || c.sortGet || c.pills) ? 1 : -1; }
+      if (ui.sort === key) ui.dir = -ui.dir; else { ui.sort = key; ui.dir = key === 'rank' || key === 'ros' || !(c.num || c.sortGet || c.pills) ? 1 : -1; }
       drawPickups();
     });
     th.append(btn);
@@ -228,6 +238,13 @@ function drawPickups() {
           wrap.append(pill);
         }
         td.append(wrap);
+      } else if (c.heat) {
+        const w = el('span', 'wb-heat'); const b = el('span', 'b');
+        b.style.width = `${Math.max(2, Math.round(0.4 * (r.heat || 0)))}px`;
+        w.append(b);
+        w.title = r.heat_label || '';
+        w.setAttribute('aria-label', `Heat ${Math.round(r.heat || 0)} of 100: ${r.heat_label || ''}`);
+        td.append(w);
       } else {
         const v = c.get ? c.get(r) : r[c.f];
         td.textContent = c.fmt ? c.fmt(v) : (v ?? '');
@@ -243,13 +260,16 @@ function drawPickups() {
   const tg = $('fmt-toggle');
   tg.hidden = !!L;
   for (const b of tg.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.fmt === ui.fmt));
-  const who = L ? `${L.name} is ${sf ? 'superflex' : '1-QB'}. ` : '';
-  const yourBid = L && L.faab && L.position ? ` Your bid is % of total budget, with outlets that quote % of what's left scaled to your ${pct(L.position.myRemainingPct)}.` : ' Bid is % of total budget.';
-  $('pickups-note').textContent = sf
-    ? `${who}Ranked by how many outlets list a player and how high.${yourBid} QB bids are superflex bids.`
-    : `${who}1-QB rankings: QB bids are standard 1-QB bids, and QBs are ranked lower (they count about ${Math.round(100 * BOARD.qb_1qb_factor)}% as much as in superflex).${yourBid}`;
+  const who = L ? `${L.name} is ${sf ? 'superflex' : '1-QB'}${L.type === 'dynasty' ? ', dynasty' : ''}. ` : '';
+  const calib = L && L.calib ? (L.calib.raw !== null ? ` This league pays about ${L.calib.mult}x the published bids (${L.calib.n} claims), and your bid includes that.`
+    : ` Bids aren't adjusted to this league yet (${L.calib.n} of ${BOARD.model.calib.min_claims} matched claims).`) : '';
+  const yourBid = L && L.faab && L.position ? ` Your bid is % of total budget, with outlets that quote % of what's left scaled to your ${pct(L.position.myRemainingPct)}.${calib}` : ' Bid is % of total budget.';
+  const how = L
+    ? `For you: player value${L.type === 'dynasty' ? ' (dynasty)' : ` for ${L.name}'s lineup`}, plus heat, plus how much he'd beat your worst starter at his position, plus a boost where your lineup check says Need or Thin.`
+    : `Ranked by value for ${sf ? 'superflex' : '1-QB'} (rest-of-season rank) and heat (how many outlets list him and how high, plus Sleeper trending adds).`;
+  $('pickups-note').textContent = `${who}${how}${yourBid}${sf ? ' QB bids are superflex bids.' : ' QB bids are standard 1-QB bids.'} ~ marks an estimated bid.`;
   const legend = $('pickups-legend');
-  if (L) legend.textContent = ui.showTaken ? `All pickups for ${L.name}; rostered players are crossed out.` : `Open in ${L.name}, sorted by consensus.`;
+  if (L) legend.textContent = ui.showTaken ? `All pickups for ${L.name}; rostered players are crossed out.` : `Open in ${L.name}, sorted for your roster.`;
   else {
     const keys = el('span', 'wb-lg');
     keys.append(el('span', 'open', 'Open'), el('span', 'mine', 'Yours'), el('span', 'taken', 'Taken'));
@@ -356,6 +376,7 @@ $('fmt-toggle').addEventListener('click', (e) => {
 });
 $('search').addEventListener('input', (e) => { ui.q = e.target.value.trim().toLowerCase(); drawPickups(); });
 $('show-taken').addEventListener('change', (e) => { ui.showTaken = e.target.checked; drawPickups(); });
+$('show-deep').addEventListener('change', (e) => { ui.showDeep = e.target.checked; drawPickups(); });
 $('user-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = $('username').value.trim();

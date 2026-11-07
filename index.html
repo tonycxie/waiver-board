@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Waiver Board</title>
 <meta name="description" content="Consensus waiver pickups and FAAB bids for superflex and 1-QB leagues, checked against your Sleeper leagues.">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 <main class="wb">
@@ -39,6 +39,7 @@
         <div class="wb-pos" id="pos-filter" role="group" aria-label="Position"></div>
         <input class="wb-search" id="search" type="search" placeholder="Search player or team" aria-label="Search players">
         <label class="wb-toggle" id="taken-toggle" hidden><input type="checkbox" id="show-taken"> Show taken</label>
+        <label class="wb-toggle" title="Players only one source lists"><input type="checkbox" id="show-deep"> Deep cuts (<span id="deep-count">0</span>)</label>
       </div>
       <div class="wb-legend" id="pickups-legend"></div>
       <div class="wb-scroll">
@@ -92,6 +93,6 @@
   </section>
   <footer class="wb-credit">Rankings and dynasty values: data from <a href="https://www.fantasypros.com" rel="noopener" target="_blank">FantasyPros</a> expert consensus, via <a href="https://github.com/dynastyprocess/data" rel="noopener" target="_blank">DynastyProcess</a>. Leagues, rosters and injuries: <a href="https://sleeper.com" rel="noopener" target="_blank">Sleeper</a>. Not affiliated with either.</footer>
 </main>
-<script type="module" src="app.js?v=6"></script>
+<script type="module" src="app.js?v=7"></script>
 </body>
 </html>

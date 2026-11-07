@@ -78,6 +78,10 @@ a { color: inherit; }
 td.c-player { font-weight: 600; white-space: nowrap; }
 td.c-faab { white-space: nowrap; }
 td.c-sub { color: var(--muted); white-space: nowrap; }
+td.c-ros { color: var(--muted); white-space: nowrap; }
+td.c-up { color: var(--muted); font-size: 12px; }
+.wb-heat { display: inline-block; width: 40px; height: 8px; border-radius: 4px; background: color-mix(in srgb, var(--bar) 25%, transparent); vertical-align: middle; }
+.wb-heat .b { display: block; height: 8px; border-radius: 4px; background: var(--bar); }
 .wb-bar { display: flex; align-items: center; gap: 6px; }
 .wb-bar .b { display: inline-block; height: 8px; border-radius: 4px; background: var(--bar); }
 .wb-empty { color: var(--muted); font-size: 13px; padding: 8px 0; margin: 0; }
@@ -110,6 +114,10 @@ td.c-sub { color: var(--muted); white-space: nowrap; }
   #pickups-table td.c-sub { order: 2; font-size: 13px; }
   #pickups-table td.c-faab { order: 3; margin-left: auto; font-family: var(--serif); font-size: 15px; }
   #pickups-table td.c-lg { order: 4; flex: 1 0 100%; }
+  #pickups-table td.c-ros { order: 2; font-size: 13px; }
+  #pickups-table td.c-heat { order: 2; }
+  #pickups-table td.c-up { order: 5; flex: 1 0 100%; font-size: 13px; }
+  #pickups-table td.c-up:empty { display: none; }
   #pickups-table td.c-med { order: 5; flex: 1 0 100%; color: var(--muted); font-size: 13px; }
   #pickups-table td.c-med::before { content: "League median bid: "; }
   #pickups-table td.c-med:empty { display: none; }

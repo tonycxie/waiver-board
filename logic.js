@@ -3,8 +3,8 @@
 
 export const OFFENSE = ['QB', 'RB', 'WR', 'TE'];
 
-// players.json rows: [name, pos, team, ros_pos_rank, weekly_pos_rank, bye, dyn_value, dyn_value_1qb]
-export const P = { name: 0, pos: 1, team: 2, ros: 3, weekly: 4, bye: 5, dyn: 6, dyn1: 7 };
+// players.json rows: [name, pos, team, ros_pos_rank, weekly_pos_rank, bye, dyn_value, dyn_value_1qb, dyn_rank, dyn_rank_1qb]
+export const P = { name: 0, pos: 1, team: 2, ros: 3, weekly: 4, bye: 5, dyn: 6, dyn1: 7, dynR: 8, dynR1: 9 };
 
 export function isSuperflex(league) {
   const rp = league.roster_positions || [];
@@ -99,19 +99,90 @@ const r1 = (x) => Number(x.toFixed(1));  // same half-way behaviour as Python ro
 
 // One league's bid, as % of total budget (build.py's estimate() with rem_frac). Each input is
 // [lo, hi, rem] from board.json; rem = 1 means the outlet quoted % of the budget you have LEFT, so it is
-// scaled by what this team has left before the median. The result is capped at what's left.
+// scaled by what this team has left before the median. Then x this league's calibration multiplier, capped
+// at what's left. With no inputs, `est` ([lo, hi], an estimated bid, % of total) is used instead (scale_est).
 const r1h = (x) => Math.floor(x * 10 + 0.5) / 10;  // halves up, same arithmetic as build.py's r1h
-export function leagueBid(inputs, remFrac, capPct) {
-  if (!inputs || !inputs.length) return null;
-  const k = (v, rem) => (rem ? v * remFrac : v);
-  let lo = median(inputs.map((x) => k(x[0], x[2])));
-  let hi = median(inputs.map((x) => k(x[1], x[2])));
+const r2h = (x) => Math.floor(x * 100 + 0.5) / 100;
+export function leagueBid(inputs, remFrac, capPct, mult = 1, est = null) {
+  let lo, hi, n, approx = false;
+  if (inputs && inputs.length) {
+    const k = (v, rem) => (rem ? v * remFrac : v);
+    lo = median(inputs.map((x) => k(x[0], x[2]))) * mult;
+    hi = median(inputs.map((x) => k(x[1], x[2]))) * mult;
+    n = inputs.length;
+  } else if (est) {
+    lo = est[0] * mult; hi = est[1] * mult; n = 0; approx = true;
+  } else return null;
   let capped = false;
   if (capPct !== null && capPct !== undefined && hi > capPct) { lo = Math.min(lo, capPct); hi = capPct; capped = true; }
-  return { lo: r1h(lo), hi: r1h(hi), mid: r1h((lo + hi) / 2), capped, n: inputs.length };
+  return { lo: r1h(lo), hi: r1h(hi), mid: r1h((lo + hi) / 2), capped, n, approx };
 }
 
-export const fmtBid = (b) => (!b ? null : b.lo === b.hi ? `${b.lo}%` : `${b.lo}–${b.hi}%`);
+export const fmtBid = (b) => (!b ? null : (b.approx ? '~' : '') + (b.lo === b.hi ? `${b.lo}%` : `${b.lo}–${b.hi}%`));
+
+// ---------------------------------------------------------------- ranking model (build.py MODEL, via board.model)
+// 0-100 value: 100 * 0.5 ** (rank / half); no rank -> model.missing_value. build.py curve().
+export function curve(rank, half, model) {
+  if (rank === null || rank === undefined) return model.missing_value;
+  return r1h(100 * 0.5 ** (rank / half));
+}
+
+// "For you" (build.py for_you): league score (redraft value from this league's starter depth, or dynasty
+// value) + half of how far a player beats your worst starter at his position + a Need/Thin bonus.
+// Returns {sid: {fy, gain, over, empty, rank}} for every board pickup.
+export function forYou({ rosterPositions, teams, dynasty, sf, myPlayers, players, pickups, needs, model }) {
+  const { need } = flexShare(rosterPositions);
+  const half = Object.fromEntries(OFFENSE.map((pos) => [pos, Math.max(1, need[pos] * teams)]));
+  const val = (p) => (dynasty ? curve(p[sf ? P.dynR : P.dynR1], model.dyn_half, model) : curve(p[P.ros], half[p[P.pos]], model));
+  const bar = {};
+  for (const pos of OFFENSE) {
+    const mine = myPlayers.map((sid) => players[sid]).filter((p) => p && p[P.pos] === pos)
+      .map((p) => [val(p), p[P.name]])
+      .sort((a, b) => (b[0] - a[0]) || (a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0));
+    const k = Math.max(1, Math.floor(need[pos] + 0.5));
+    bar[pos] = mine.length >= k ? mine[k - 1] : [0, null];
+  }
+  const lv = Object.fromEntries((needs || []).map((n) => [n.pos, n.level]));
+  const nb = model.need_bonus;
+  const out = {};
+  for (const r of pickups) {
+    const p = players[r.sid];
+    if (!p) continue;
+    const v = val(p);
+    const gain = v - bar[r.pos][0];
+    const bonus = (nb[lv[r.pos]] || 0) + (r.pos !== 'QB' ? (nb[lv.FLEX] || 0) / 2 : 0);
+    const fy = model.value_weight * v + model.heat_weight * r.heat + model.gain_weight * Math.max(0, gain) + bonus;
+    out[r.sid] = { fy: r1h(fy), gain: r1h(gain), over: gain > 0 ? bar[r.pos][1] : null, empty: gain > 0 && bar[r.pos][1] === null };
+  }
+  const order = pickups.filter((r) => out[r.sid]).sort((a, b) => (out[b.sid].fy - out[a.sid].fy) || (a.rank - b.rank));
+  order.forEach((r, i) => { out[r.sid].rank = i + 1; });
+  return out;
+}
+
+export const upLabel = (f) => (!f ? '' : f.empty ? 'fills an empty spot' : f.over ? `+${f.gain} over ${f.over}` : '');
+
+// What a league pays versus the published bids (build.py calibrate). Each paid claim is matched to the latest
+// board made before it (within model.calib.max_days); ratio = winning % / that board's bid. Median ratio,
+// shrunk toward 1 with few claims, kept within [lo, hi]. 1-QB leagues compare QBs with standard bids.
+export function calibrate({ claims, budget, players, history, sf, seasonStartMs, model }) {
+  const C = model.calib;
+  const ratios = [];
+  for (const c of claims) {
+    if (!c.bid || (c.created || 0) < seasonStartMs) continue;
+    const p = players[String(c.player_id)];
+    if (!p || !OFFENSE.includes(p[P.pos])) continue;
+    let h = null;
+    for (const x of history || []) if (x.at <= c.created) h = x;  // history is oldest first
+    if (!h || c.created - h.at > C.max_days * 86400e3) continue;
+    const pred = (!sf && p[P.pos] === 'QB' ? h.bids_1qb : h.bids)[String(c.player_id)];
+    if (pred && pred >= C.min_pred) ratios.push(r1((100 * c.bid) / budget) / pred);
+  }
+  const n = ratios.length;
+  if (n < C.min_claims) return { mult: 1, n, raw: null };
+  const raw = median(ratios);
+  const mult = Math.min(C.hi, Math.max(C.lo, 1 + ((raw - 1) * n) / (n + C.shrink)));
+  return { mult: r2h(mult), n, raw: r2h(raw) };
+}
 
 export function faabPosition(rosters, myRosterId, budget) {
   const rem = new Map(rosters.map((r) => [r.roster_id, Math.max(0, budget - Math.max(0, Number((r.settings || {}).waiver_budget_used) || 0))]));
@@ -175,13 +246,18 @@ export function summarizeLeague({ league, rosters, txByWeek, userId, players, bo
   const base = { id: league.league_id, name: league.name, type: treatAs(league), sf: isSuperflex(league), teams, faab, budget, found: !!my };
   if (!my) return base;
   const claims = faab ? claimsFromTransactions(txByWeek || {}) : [];
+  const needs = rosterNeeds({ rosterPositions: league.roster_positions || [], teams, myPlayers: my.players || [], players,
+    targetWeek: board.target_week, weeklyOk, stashed: [...(my.reserve || []), ...(my.taxi || [])], injuries });
   return {
     ...base,
     myRosterId: my.roster_id,
     position: faab ? faabPosition(rosters, my.roster_id, budget) : null,
-    needs: rosterNeeds({ rosterPositions: league.roster_positions || [], teams, myPlayers: my.players || [], players,
-      targetWeek: board.target_week, weeklyOk, stashed: [...(my.reserve || []), ...(my.taxi || [])], injuries }),
+    needs,
     bids: faab ? bidHistory({ claims, budget, myRosterId: my.roster_id, players, seasonStartMs: board.season_start_ms }) : null,
+    calib: faab ? calibrate({ claims, budget, players, history: board.bid_history, sf: base.sf, seasonStartMs: board.season_start_ms, model: board.model })
+      : null,
+    fy: forYou({ rosterPositions: league.roster_positions || [], teams, dynasty: base.type === 'dynasty', sf: base.sf,
+      myPlayers: my.players || [], players, pickups: board.pickups.filter((p) => p.sid), needs, model: board.model }),
     avail: Object.fromEntries(board.pickups.filter((p) => p.sid).map((p) => [p.sid, availability(p.sid, rosters, my.roster_id)])),
   };
 }

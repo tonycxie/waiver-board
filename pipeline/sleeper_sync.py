@@ -8,7 +8,7 @@ Writes (only fields the board uses; no owner ids, user names or chat):
   sync/state.json              NFL state (season, week, leg) and when this ran
   sync/sleeper_<key>.json      one per league in pipeline/sync_config.json, in build.py's league-file shape
   sync/sleeper_bids.json       completed waiver claims this season, in build.py's bids-file shape
-  sync/trending_add.json       Sleeper's most-added players, last 24 hours
+  sync/trending_add.json       Sleeper's most-added players, last 48 hours (so Monday-night news counts on Tuesday)
   sync/injuries.json           offensive players with an injury designation or a non-active status
                                (from /players/nfl, which Sleeper asks to call at most once a day)
 
@@ -119,8 +119,8 @@ for c in CFG["leagues"]:
 write("sleeper_bids.json", bids)
 
 try:
-    trend = get("/players/nfl/trending/add?lookback_hours=24&limit=50")
-    write("trending_add.json", {"fetched_at": STAMP, "lookback_hours": 24, "players": trend})
+    trend = get("/players/nfl/trending/add?lookback_hours=48&limit=60")
+    write("trending_add.json", {"fetched_at": STAMP, "lookback_hours": 48, "players": trend})
 except RuntimeError as e:
     problems.append(str(e))
 

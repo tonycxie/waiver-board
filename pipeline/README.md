@@ -5,14 +5,14 @@ The main copy of this pipeline, with Tony's own league steps, lives in his Claud
 scheduled run uses when it can't open that project. It refreshes only this site's two data files.
 
 ## Sleeper sync (GitHub Actions)
-`.github/workflows/sleeper-sync.yml` runs `pipeline/sleeper_sync.py` twice a day (5:20 AM and 5:20 PM Pacific),
+`.github/workflows/sleeper-sync.yml` runs `pipeline/sleeper_sync.py` twice a day (5:20 AM and 5:20 PM Pacific) plus Tuesday 10:20 AM,
 whenever the script or `sync_config.json` changes, and on demand from the Actions tab ("Run workflow"). It
 commits exact Sleeper JSON to `sync/`:
 - `state.json`: NFL week and when the sync ran (`fetched_at`, UTC), plus any `problems`
 - `sleeper_<key>.json`: each league in `sync_config.json`, in `build.py`'s league-file shape
   (roster player lists, starters, reserve, taxi, FAAB used; no owner ids or names)
 - `sleeper_bids.json`: every completed waiver claim this season, in `build.py`'s bids-file shape
-- `trending_add.json`: Sleeper's 50 most-added players, last 24 hours
+- `trending_add.json`: Sleeper's 60 most-added players, last 48 hours (team defenses included; `build.py` skips them). `build.py` credits the top 30 offensive players as one more ranked list ("heat").
 - `injuries.json`: offensive players with an injury designation or non-active status (refreshed once a day)
 
 A weekly run uses these instead of WebFetch when `state.json`'s `fetched_at` is under 30 hours old and its
@@ -23,9 +23,9 @@ A weekly run uses these instead of WebFetch when `state.json`'s `fetched_at` is 
 2. Week: WebFetch `https://api.sleeper.app/v1/state/nfl?nocache=<unique>` and read `week` = N.
 3. Player database: `GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/dynastyprocess/data /home/claude/dynastyprocess/data` (10-minute timeout). Run Python that reads it with `python3 -I`.
 4. Run the three source agents below in parallel (cloud-only: RotoBaller article bodies and FantasyPros' full table need a browser, so they come back partial or missing).
-5. `cd /home/claude/waiver && SOURCE_WEEK=N TARGET_WEEK=N python3 -I build.py`. Fix unmatched names in `sources/` and re-run. No league files is fine: it still writes `out/pickups.json`.
-6. `SOURCE_WEEK=N TARGET_WEEK=N python3 -I export_site.py <repo>` and check `unmatched=[]`.
-7. Commit only `data/` as `Week N board` and push to `main`.
+5. Copy `sync/trending_add.json` to `/home/claude/waiver/data/`. Then `cd /home/claude/waiver && HISTORY_DIR=<repo>/data/history SOURCE_WEEK=N TARGET_WEEK=N python3 -I build.py`. Fix unmatched names in `sources/` and re-run. No league files is fine: it still writes `out/pickups.json`.
+6. `SOURCE_WEEK=N TARGET_WEEK=N python3 -I export_site.py <repo>` and check `unmatched=[]`. It also writes `data/history/weekNN.json` (this week's bids, used to calibrate bids to each league).
+7. Commit only `data/` (history included) as `Week N board` and push to `main`.
 
 ## Agent prompts
 Shared rules for every agent:
@@ -36,10 +36,11 @@ Shared rules for every agent:
 - Leave out kickers and defenses.
 - FAAB on a $100 budget is the same number as a percent; on a $1000 budget, divide by 10. "Up to X%" goes in high only; "at least X%" in low only.
 - QBs: the standard (1-QB) bid goes in `faab_pct_*` and the superflex bid in `sf_faab_pct_*`. Never put a superflex bid in `faab_pct_*`; the friends' site uses the standard QB bids for 1-QB leagues.
+- `ranking_type`: "overall" for one numbered order; "by_position" when ranks restart at each position (keep the within-position number as `rank`); "unranked" when the order means nothing (page order, alphabetical). Credit depends on it.
 - Validate that every file parses.
 
 **Pickup file shape** (`sources/<key>.json`):
-`{"source", "url", "week", "published", "status": "ok|paywalled|unreachable|partial", "ranking_type": "overall|by_position|unranked", "players": [{"rank", "name", "pos", "team", "faab_pct_low", "faab_pct_high", "sf_faab_pct_low", "sf_faab_pct_high", "note"}]}`
+`{"source", "url", "week", "published", "status": "ok|paywalled|unreachable|partial", "ranking_type": "overall|by_position|unranked", "budget_basis": "total|remaining", "players": [{"rank", "name", "pos", "team", "faab_pct_low", "faab_pct_high", "sf_faab_pct_low", "sf_faab_pct_high", "note"}]}`
 
 **FAAB file shape** (`faab/<key>_faab.json`):
 `{"source", "url", "week", "published", "status", "budget_basis": "total|remaining|null", "players": [{"name", "pos", "team", "faab_pct_low", "faab_pct_high", "sf_faab_pct_low", "sf_faab_pct_high", "aggr_pct_low", "aggr_pct_high", "note"}]}`
@@ -55,7 +56,7 @@ Shared rules for every agent:
   - Sharp Football Analysis: use the dedicated `/fantasy/nfl-waiver-wire-pickups-week-N-2026/` article, and cache-bust the weekly page.
 - **Agent C** writes `footballguys.json`, `dynastynerds.json`, `ftn.json` and `rotowire.json` in `sources/`, plus `dynastynerds_faab.json` and `squawk_faab.json` in `faab/`:
   - **Footballguys:** "Top Waiver Wire Pickups of Week N" at `/article/2026-email-feature-top-waiver-wire-pickups-weekNN`, with ranking_type "unranked".
-  - **Dynasty Nerds:** `/waiver-wire/week-N-waiver-wire-2026/`. QB bids go only in the sf_ fields, and ranking_type is "by_position".
+  - **Dynasty Nerds:** `/waiver-wire/week-N-waiver-wire-2026/`. QB bids go only in the sf_ fields. ranking_type is "unranked": it lists players alphabetically within each position.
   - **FTN**
   - **RotoWire:** the main column.
   - **Fantasy Squawk:** `https://fantasysquawk.com/waiver-wire/2026/week-N`, with budget_basis "remaining". QB superflex ranges go in the sf_ fields.
