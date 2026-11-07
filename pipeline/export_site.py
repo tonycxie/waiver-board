@@ -22,8 +22,8 @@ SITE = sys.argv[1] if len(sys.argv) > 1 else "/home/claude/waiver-board"
 TARGET_WEEK = int(os.environ.get("TARGET_WEEK", "9"))
 SOURCE_WEEK = int(os.environ.get("SOURCE_WEEK", str(TARGET_WEEK)))
 OFFENSE = {"QB", "RB", "WR", "TE"}
-DISPLAY_TEAM = {"GBP": "GB", "KCC": "KC", "LVR": "LV", "NEP": "NE", "NOS": "NO", "SFO": "SF", "TBB": "TB"}
-TEAM_FIX = {"JAC": "JAX", "GB": "GBP", "KC": "KCC", "LV": "LVR", "NE": "NEP", "NO": "NOS", "SF": "SFO",
+DISPLAY_TEAM = {"JAC": "JAX", "GBP": "GB", "KCC": "KC", "LVR": "LV", "NEP": "NE", "NOS": "NO", "SFO": "SF", "TBB": "TB"}
+TEAM_FIX = {"JAC": "JAC", "JAX": "JAC", "GB": "GBP", "KC": "KCC", "LV": "LVR", "NE": "NEP", "NO": "NOS", "SF": "SFO",
             "TB": "TBB", "WSH": "WAS", "LA": "LAR"}
 
 
@@ -117,16 +117,30 @@ def sid_for(name, pos, team):
     return c[0]["sleeper_id"] if c else None
 
 
+def general(pool):
+    """League-agnostic bid, same rule as build.py's estimate(): %-of-total bids when there are any,
+    otherwise the %-of-remaining bids, flagged as such."""
+    tot = [f for f in pool if not f.get("rem")]
+    use = tot or pool
+    return {"lo": median([f["lo"] for f in use]), "hi": median([f["hi"] for f in use]),
+            "from": sorted({f["src"] for f in use}), "of_remaining": not tot}
+
+
+def compact(pool):
+    # [lo, hi, 1 if % of remaining else 0] per outlet; the page converts these per league
+    return [[f["lo"], f["hi"], 1 if f.get("rem") else 0] for f in pool]
+
+
 dash = os.path.join(ROOT, "out", "dashboard.json")
-sid_by_name, qb1 = {}, {}
+sid_by_name, qb1, pools = {}, {}, {}
 if os.path.exists(dash):
     for r in json.load(open(dash)).get("players", []):
         sid_by_name[r["name"]] = r["sleeper_id"]
+        pools[r["name"]] = r.get("faab_pool") or []
         # build.py keeps each outlet's standard (1-QB) bids in faab_inputs, superflex bids in sf_faab_inputs
         pool = [f for f in r.get("faab_inputs", []) if "faablab" not in (f.get("src") or "").lower()]
         if r["pos"] == "QB" and pool:
-            qb1[r["name"]] = {"lo": median([f["lo"] for f in pool]), "hi": median([f["hi"] for f in pool]),
-                              "from": sorted({f["src"] for f in pool})}
+            qb1[r["name"]] = {**general(pool), "pool": pool}
 # Manual 1-QB QB bids (used when out/dashboard.json is missing, e.g. a rebuilt week)
 mq = os.path.join(ROOT, "out", "faab_1qb.json")
 if os.path.exists(mq):
@@ -148,14 +162,18 @@ for r in json.load(open(os.path.join(ROOT, "out", "pickups.json"))):
         unmatched.append(r["player"])
     row = {k: r.get(k) for k in KEEP}
     row["sid"] = sid
+    row["faab_in"] = compact(pools.get(r["player"], []))
     if r["pos"] == "QB":
         q = qb1.get(r["player"])
-        row["faab_1qb"] = (f"{q['lo']:g}%" if q["lo"] == q["hi"] else f"{q['lo']:g}–{q['hi']:g}%") if q else None
+        row["faab_in_1qb"] = compact(q.get("pool", [])) if q else []
+        row["faab_1qb"] = ((f"{q['lo']:g}%" if q["lo"] == q["hi"] else f"{q['lo']:g}–{q['hi']:g}%")
+                           + (" of left" if q.get("of_remaining") else "")) if q else None
         row["faab_1qb_mid"] = round((q["lo"] + q["hi"]) / 2, 1) if q else None
-        row["faab_1qb_basis"] = f"1-QB bid ({', '.join(q['from'])})" if q else None
+        row["faab_1qb_basis"] = (f"1-QB bid ({', '.join(q['from'])})" + (", % of the budget you have left" if q.get("of_remaining") else "")) if q else None
         row["score_1qb"] = round((r.get("score") or 0) * QB_1QB_FACTOR, 3)
     else:
         row["faab_1qb"], row["faab_1qb_mid"], row["faab_1qb_basis"] = r.get("faab"), r.get("faab_mid"), r.get("faab_basis")
+        row["faab_in_1qb"] = row["faab_in"]
         row["score_1qb"] = r.get("score") or 0
     p1 = players.get(sid) if sid else None
     row["dyn_value_1qb"] = p1[7] if p1 else None

@@ -10,7 +10,7 @@ Inputs (all optional except player DB; missing pieces are reported, not fatal):
 Output:
   out/dashboard.json
 """
-import csv, glob, json, os, re, statistics as st, sys
+import csv, glob, json, math, os, re, statistics as st, sys
 from datetime import datetime, timezone
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -52,11 +52,11 @@ by_name = {}
 for r in players_db:
     if r["position"] in OFFENSE and r["sleeper_id"] not in ("", "NA"):
         by_name.setdefault(norm(r["name"]), []).append(r)
-TEAM_FIX = {"JAC": "JAX", "JAX": "JAX", "GB": "GBP", "GBP": "GBP", "KC": "KCC", "KCC": "KCC",
+TEAM_FIX = {"JAC": "JAC", "JAX": "JAC", "GB": "GBP", "GBP": "GBP", "KC": "KCC", "KCC": "KCC",
             "LV": "LVR", "LVR": "LVR", "NE": "NEP", "NEP": "NEP", "NO": "NOS", "NOS": "NOS",
             "SF": "SFO", "SFO": "SFO", "TB": "TBB", "TBB": "TBB", "WAS": "WAS", "WSH": "WAS",
             "LA": "LAR", "LAR": "LAR"}
-DISPLAY_TEAM = {"GBP": "GB", "KCC": "KC", "LVR": "LV", "NEP": "NE", "NOS": "NO", "SFO": "SF", "TBB": "TB"}
+DISPLAY_TEAM = {"JAC": "JAX", "GBP": "GB", "KCC": "KC", "LVR": "LV", "NEP": "NE", "NOS": "NO", "SFO": "SF", "TBB": "TB"}
 
 
 def lookup(name, pos=None, team=None):
@@ -181,6 +181,9 @@ for key in SOURCE_ORDER:
     # Lists with no real priority order (unnumbered top-5s, alphabetical-by-position) get flat credit
     flat = d.get("ranking_type") == "unranked" or key == "dynastynerds"
     meta["flat_credit"] = flat
+    # Bids in pickup columns are % of total budget unless the file says otherwise
+    rem = d.get("budget_basis") == "remaining"
+    meta["basis"] = "remaining" if rem else "total"
     for i, x in enumerate(sorted(plist, key=lambda x: x.get("rank") or 999)):
         p = lookup(x["name"], (x.get("pos") or "").upper(), x.get("team"))
         if not p:
@@ -196,10 +199,10 @@ for key in SOURCE_ORDER:
                           "credit": round(credit, 3)})
         lo, hi = num(x.get("faab_pct_low")), num(x.get("faab_pct_high"))
         if lo is not None or hi is not None:
-            m["faab"].append({"src": meta["source"], "lo": lo if lo is not None else hi, "hi": hi if hi is not None else lo})
+            m["faab"].append({"src": meta["source"], "lo": lo if lo is not None else hi, "hi": hi if hi is not None else lo, "rem": rem})
         slo, shi = num(x.get("sf_faab_pct_low")), num(x.get("sf_faab_pct_high"))
         if slo is not None or shi is not None:
-            m["sf_faab"].append({"src": meta["source"], "lo": slo if slo is not None else shi, "hi": shi if shi is not None else slo})
+            m["sf_faab"].append({"src": meta["source"], "lo": slo if slo is not None else shi, "hi": shi if shi is not None else slo, "rem": rem})
     source_meta.append(meta)
 
 # ---------------------------------------------------------------- FAAB-specific sources
@@ -209,6 +212,7 @@ for path in sorted(glob.glob(os.path.join(ROOT, "faab", "*.json"))):
     meta = {"source": d.get("source"), "url": d.get("url"), "status": d.get("status"),
             "basis": d.get("budget_basis"), "count": len(d.get("players", [])), "unmatched": []}
     faab_meta.append(meta)
+    rem = d.get("budget_basis") == "remaining"
     for x in d.get("players", []):
         pos = (x.get("pos") or "").upper()
         if pos not in OFFENSE:
@@ -221,32 +225,64 @@ for path in sorted(glob.glob(os.path.join(ROOT, "faab", "*.json"))):
         lo, hi = num(x.get("faab_pct_low")), num(x.get("faab_pct_high"))
         if lo is not None or hi is not None:
             m["faab"] = [f for f in m["faab"] if f["src"] != d.get("source")]
-            m["faab"].append({"src": d.get("source"), "lo": lo if lo is not None else hi, "hi": hi if hi is not None else lo})
+            m["faab"].append({"src": d.get("source"), "lo": lo if lo is not None else hi, "hi": hi if hi is not None else lo, "rem": rem})
         slo, shi = num(x.get("sf_faab_pct_low")), num(x.get("sf_faab_pct_high"))
         if slo is not None or shi is not None:
             m["sf_faab"] = [f for f in m["sf_faab"] if f["src"] != d.get("source")]
-            m["sf_faab"].append({"src": d.get("source"), "lo": slo if slo is not None else shi, "hi": shi if shi is not None else slo})
+            m["sf_faab"].append({"src": d.get("source"), "lo": slo if slo is not None else shi, "hi": shi if shi is not None else slo, "rem": rem})
 
 QB_SF_SOURCES = {"RotoBaller", "Dynasty Nerds", "Fantasy Squawk"}
 
 
-def faab_estimate(pos, m):
-    """QB: median of every superflex-specific bid (RotoBaller, Dynasty Nerds, Fantasy Squawk, plus
-    CBS/RotoWire/others when they print one). Others: Faablab if present, else the median of
-    published FAAB ranges."""
+def faab_pool(pos, m):
+    """The bids a player's estimate is built from. QB: every superflex-specific bid (RotoBaller, Dynasty
+    Nerds, Fantasy Squawk, plus CBS/RotoWire/others when they print one). Others: Faablab if present,
+    else every published FAAB range."""
     if pos == "QB":
-        pool = m["sf_faab"]  # every outlet that publishes a superflex-specific QB bid
-        basis = "superflex"
-    else:
-        fl = [f for f in m["faab"] if "faablab" in (f["src"] or "").lower()]
-        pool = fl or m["faab"]
-        basis = "faablab" if fl else "published"
+        return m["sf_faab"], "superflex"
+    fl = [f for f in m["faab"] if "faablab" in (f["src"] or "").lower()]
+    return (fl, "faablab") if fl else (m["faab"], "published")
+
+
+def r1h(x):
+    # one decimal, halves up; logic.js's leagueBid uses the same arithmetic so the two always agree
+    return math.floor(x * 10 + 0.5) / 10
+
+
+def estimate(pool, basis, rem_frac=None, cap_pct=None):
+    """Median bid range, as % of total budget.
+
+    Some outlets (RotoBaller's FAAB guide, Fantasy Squawk) quote % of the budget you have LEFT. With
+    rem_frac (this league's remaining / total) those are converted to % of total before the median,
+    and the result is capped at what you have left. Without it (the league-agnostic number), the
+    %-of-total bids are used when there are any; otherwise the %-of-remaining bids are shown as such."""
     if not pool:
         return None
-    lo = st.median(f["lo"] for f in pool)
-    hi = st.median(f["hi"] for f in pool)
-    return {"lo": round(lo, 1), "hi": round(hi, 1), "mid": round((lo + hi) / 2, 1), "n": len(pool),
-            "basis": basis, "from": sorted({f["src"] for f in pool})}
+    of_remaining = False
+    if rem_frac is None:
+        tot = [f for f in pool if not f.get("rem")]
+        if tot:
+            use = [(f["lo"], f["hi"]) for f in tot]
+        else:
+            use, of_remaining = [(f["lo"], f["hi"]) for f in pool], True
+        srcs = tot or pool
+    else:
+        k = lambda f, v: v * rem_frac if f.get("rem") else v
+        use = [(k(f, f["lo"]), k(f, f["hi"])) for f in pool]
+        srcs = pool
+    lo = st.median(u[0] for u in use)
+    hi = st.median(u[1] for u in use)
+    capped = False
+    if cap_pct is not None and hi > cap_pct:
+        lo, hi, capped = min(lo, cap_pct), cap_pct, True
+    return {"lo": r1h(lo), "hi": r1h(hi), "mid": r1h((lo + hi) / 2), "n": len(srcs),
+            "basis": basis, "of_remaining": of_remaining, "capped": capped,
+            "from": sorted({f["src"] for f in srcs})}
+
+
+def faab_estimate(pos, m, rem_frac=None, cap_pct=None):
+    pool, basis = faab_pool(pos, m)
+    return estimate(pool, basis, rem_frac, cap_pct)
 
 
 # ---------------------------------------------------------------- leagues
@@ -363,12 +399,15 @@ for L in leagues:
     rostered[L["key"]] = (owned_ids, mine)
     league_out.append({"key": L["key"], "name": L["name"], "platform": "Sleeper", "treat_as": L["treat_as"],
                        "teams": L["teams"], "faab": faab_position(L), "needs": roster_needs(L),
-                       "bid_history": bid_history(L), "league_id": L["league_id"]})
+                       "bid_history": bid_history(L), "league_id": L["league_id"],
+                       "fetched_at": L.get("fetched_at"), "stale": False})
 # Yahoo leagues: written during a MacBook run (read through Claude in Chrome), one file per league:
 # data/yahoo_<key>.json = {"name": "...", "budget": 100, "teams": 12, "my_remaining": 37,
 #   "max_opp_remaining": 88, "my_roster": ["Player Name", ...],
 #   "status": {"Player Name": "available" | "taken" | "mine", ...},   # for every candidate checked
-#   "claims": [{"player": "Name", "pos": "RB", "bid": 12, "week": 5}]}  # optional bid history
+#   "claims": [{"player": "Name", "pos": "RB", "bid": 12, "week": 5}],  # optional bid history
+#   "as_of_week": 9, "fetched_at": "2026-11-04T19:00-08:00"}           # when it was read
+# Cloud-only runs keep the last file, so it is stale whenever as_of_week isn't this run's SOURCE_WEEK.
 yahoo = []
 for path in sorted(glob.glob(os.path.join(ROOT, "data", "yahoo_*.json"))):
     Y = json.load(open(path))
@@ -392,7 +431,8 @@ for path in sorted(glob.glob(os.path.join(ROOT, "data", "yahoo_*.json"))):
                                 "median_opp_remaining_pct": round(100 * st.median(Y["opp_remaining"]) / Y["budget"], 1) if Y.get("opp_remaining") else None},
                        "bid_history": {"this_season": {"n_paid_claims": len(claims), "by_pos": by_pos,
                                                        "top": sorted(claims, key=lambda c: -c["pct"])[:8]}} if claims else {},
-                       "needs": []})
+                       "needs": [], "as_of_week": Y.get("as_of_week"), "fetched_at": Y.get("fetched_at"),
+                       "stale": Y.get("as_of_week") != SOURCE_WEEK})
 if not yahoo:
     league_out.append({"key": "yahoo", "name": "Yahoo leagues (2)", "platform": "Yahoo", "treat_as": "redraft",
                        "pending": "Read through Claude in Chrome on a MacBook run"})
@@ -409,11 +449,20 @@ for sid, m in mentions.items():
         avail[L["key"]] = "mine" if sid in mine else ("taken" if sid in owned_ids else "available")
     for Y in yahoo:
         avail[Y["key"]] = Y["status_norm"].get(norm(p["name"]), "unknown")
+    pool, pool_basis = faab_pool(pos, m)
+    league_faab = {}
+    for LO in league_out:
+        fa = LO.get("faab") or {}
+        if fa.get("my_remaining") is None or not fa.get("budget"):
+            continue
+        league_faab[LO["key"]] = estimate(pool, pool_basis, fa["my_remaining"] / fa["budget"], fa["my_remaining_pct"])
     rows.append({"sleeper_id": sid, "name": p["name"], "pos": pos,
                  "team": DISPLAY_TEAM.get(p["team"], p["team"]), "age": num(p.get("age")),
                  "mentions": len(m["hits"]), "score": score,
                  "sources": [h["source"] for h in sorted(m["hits"], key=lambda h: h["pos_in_list"])],
-                 "faab": faab_estimate(pos, m), "faab_inputs": m["faab"], "sf_faab_inputs": m["sf_faab"],
+                 "faab": estimate(pool, pool_basis), "league_faab": league_faab,
+                 "faab_pool": pool, "faab_pool_basis": pool_basis,
+                 "faab_inputs": m["faab"], "sf_faab_inputs": m["sf_faab"],
                  "availability": avail, "ros_pos_rank": ros_pos_rank(p), "ros_overall": ros_overall(p),
                  "owned_pct": owned(p), "bye": bye_week(p), "dynasty": dynasty(p)})
 
@@ -445,7 +494,22 @@ dyn_keys = [L["key"] for L in league_out if L.get("treat_as") == "dynasty"]
 def fmt_range(f):
     if not f:
         return None
-    return f"{f['lo']:g}%" if f["lo"] == f["hi"] else f"{f['lo']:g}–{f['hi']:g}%"
+    t = f"{f['lo']:g}%" if f["lo"] == f["hi"] else f"{f['lo']:g}–{f['hi']:g}%"
+    return t + " of left" if f.get("of_remaining") else t
+
+
+BASIS_LABEL = {"superflex": "Superflex QB bid", "faablab": "Faablab", "published": "Published FAAB"}
+
+
+def fmt_basis(f, league=False):
+    if not f:
+        return None
+    t = BASIS_LABEL[f["basis"]] + f" ({', '.join(f['from'])})"
+    if f.get("of_remaining"):
+        t += ", % of the budget you have left"
+    elif league:
+        t += ", % of total; %-of-remaining bids scaled to your FAAB left" + (", capped at what you have" if f.get("capped") else "")
+    return t
 
 
 ds_pickups = []
@@ -454,14 +518,17 @@ for r in rows:
     row = {"rank": r["consensus_rank"], "player": r["name"], "pos": r["pos"], "team": r["team"],
            "mentions": r["mentions"], "score": r["score"], "sources": ", ".join(r["sources"]),
            "faab": fmt_range(f), "faab_mid": f["mid"] if f else None,
-           "faab_basis": ({"superflex": "Superflex QB bid", "faablab": "Faablab",
-                           "published": "Published FAAB"}[f["basis"]] + f" ({', '.join(f['from'])})") if f else None,
+           "faab_basis": fmt_basis(f),
            "ros_pos_rank": round(r["ros_pos_rank"]) if r["ros_pos_rank"] else None,
            "owned_pct": r["owned_pct"], "bye": r["bye"],
            "dyn_value": r["dynasty"]["value_sf"], "dyn_rank": round(r["dynasty"]["ecr_sf"]) if r["dynasty"]["ecr_sf"] else None}
-    AV = {"available": "Open", "taken": "Taken", "mine": "Yours", "unknown": "?"}
+    AV = {"available": "Open", "taken": "Taken", "mine": "Yours", "unknown": "Unchecked"}
     for k in league_keys:
         row["avail_" + k] = AV[r["availability"].get(k, "unknown")]
+        lf = r["league_faab"].get(k)
+        row["bid_" + k] = fmt_range(lf)
+        row["bidmid_" + k] = lf["mid"] if lf else None
+        row["bidbasis_" + k] = fmt_basis(lf, league=True)
     row["open_in"] = sum(1 for k in league_keys if r["availability"].get(k) == "available")
     row["open_leagues"] = ", ".join(SHORT.get(k, k) for k in league_keys if r["availability"].get(k) == "available")
     ds_pickups.append(row)
@@ -476,6 +543,9 @@ for L in league_out:
                        "teams_with_more": fa.get("teams_with_more"),
                        "median_opp_remaining_pct": fa.get("median_opp_remaining_pct"),
                        "status": L.get("pending") or "Loaded",
+                       "stale": bool(L.get("stale")),
+                       "as_of": (f"Week {L['as_of_week']} data" if L.get("as_of_week") else "last MacBook run") if L.get("stale") else None,
+                       "fetched_at": L.get("fetched_at"),
                        "flags": sum(1 for n in L.get("needs", []) if n["level"] != "ok")})
     for n in L.get("needs", []):
         detail = []
@@ -511,6 +581,12 @@ for s in faab_meta:
                        "players": s["count"], "week": SOURCE_WEEK, "url": s.get("url")})
 ds_sources.append({"source": "Sleeper API", "role": "Rosters & winning bids", "status": "Loaded" if leagues else "Not run",
                    "players": None, "week": None, "url": "https://api.sleeper.app"})
+if yahoo:
+    yw = sorted({Y.get("as_of_week") for Y in yahoo}, key=lambda w: w or 0)
+    stale = any(Y.get("as_of_week") != SOURCE_WEEK for Y in yahoo)
+    ds_sources.append({"source": "Yahoo league pages", "role": "Rosters, FAAB & winning bids",
+                       "status": (f"Stale (Week {yw[0]} data)" if yw[0] else "Stale (last MacBook run)") if stale else "Loaded",
+                       "players": None, "week": yw[-1], "url": "https://football.fantasysports.yahoo.com"})
 ds_sources.append({"source": "DynastyProcess / FantasyPros ECR", "role": "Ranks, byes, dynasty values",
                    "status": "Loaded", "players": None, "week": None, "url": "https://github.com/dynastyprocess/data"})
 

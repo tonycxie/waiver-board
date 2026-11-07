@@ -3,8 +3,8 @@
 
 export const OFFENSE = ['QB', 'RB', 'WR', 'TE'];
 
-// players.json rows: [name, pos, team, ros_pos_rank, weekly_pos_rank, bye, dyn_value]
-export const P = { name: 0, pos: 1, team: 2, ros: 3, weekly: 4, bye: 5, dyn: 6 };
+// players.json rows: [name, pos, team, ros_pos_rank, weekly_pos_rank, bye, dyn_value, dyn_value_1qb]
+export const P = { name: 0, pos: 1, team: 2, ros: 3, weekly: 4, bye: 5, dyn: 6, dyn1: 7 };
 
 export function isSuperflex(league) {
   const rp = league.roster_positions || [];
@@ -76,6 +76,22 @@ const median = (v) => {
   return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
 };
 const r1 = (x) => Number(x.toFixed(1));  // same half-way behaviour as Python round(x, 1)
+
+// One league's bid, as % of total budget (build.py's estimate() with rem_frac). Each input is
+// [lo, hi, rem] from board.json; rem = 1 means the outlet quoted % of the budget you have LEFT, so it is
+// scaled by what this team has left before the median. The result is capped at what's left.
+const r1h = (x) => Math.floor(x * 10 + 0.5) / 10;  // halves up, same arithmetic as build.py's r1h
+export function leagueBid(inputs, remFrac, capPct) {
+  if (!inputs || !inputs.length) return null;
+  const k = (v, rem) => (rem ? v * remFrac : v);
+  let lo = median(inputs.map((x) => k(x[0], x[2])));
+  let hi = median(inputs.map((x) => k(x[1], x[2])));
+  let capped = false;
+  if (capPct !== null && capPct !== undefined && hi > capPct) { lo = Math.min(lo, capPct); hi = capPct; capped = true; }
+  return { lo: r1h(lo), hi: r1h(hi), mid: r1h((lo + hi) / 2), capped, n: inputs.length };
+}
+
+export const fmtBid = (b) => (!b ? null : b.lo === b.hi ? `${b.lo}%` : `${b.lo}–${b.hi}%`);
 
 export function faabPosition(rosters, myRosterId, budget) {
   const rem = new Map(rosters.map((r) => [r.roster_id, Math.max(0, budget - Math.max(0, Number((r.settings || {}).waiver_budget_used) || 0))]));

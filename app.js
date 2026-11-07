@@ -1,4 +1,4 @@
-import { isFaab, summarizeLeague, OFFENSE } from './logic.js?v=4';
+import { isFaab, summarizeLeague, leagueBid, fmtBid, OFFENSE } from './logic.js?v=5';
 
 const API = 'https://api.sleeper.app/v1';
 const $ = (id) => document.getElementById(id);
@@ -105,6 +105,19 @@ function drawChips() {
   $('skipped').textContent = SKIPPED.length ? `Not shown: ${SKIPPED.map((s) => `${s.name} (${s.why})`).join(', ')}.` : '';
 }
 
+// The bid to show: in a FAAB league tab, converted to that team's FAAB left; otherwise the general one.
+function bid(r, L, sf) {
+  const f = F(sf);
+  const inputs = sf ? r.faab_in : r.faab_in_1qb;
+  if (L && L.faab && L.position && inputs && inputs.length) {
+    const b = leagueBid(inputs, L.position.myRemaining / L.position.budget, L.position.myRemainingPct);
+    const why = `${r[f.basis] || 'Published FAAB'}. Scaled to your ${pct(L.position.myRemainingPct)} left`
+      + (b.capped ? ', capped at what you have.' : '.');
+    return { txt: fmtBid(b), mid: b.mid, title: why };
+  }
+  return { txt: r[f.bid], mid: r[f.mid], title: r[f.basis] };
+}
+
 function bestOpen() {
   const box = $('best');
   const lines = [];
@@ -118,7 +131,8 @@ function bestOpen() {
   for (const [l, r, f] of lines) {
     const row = el('span', LEAGUES.length > 1 ? 'wb-best-row' : null);
     if (LEAGUES.length > 1) row.append(el('span', 'wb-sub', `${l.name}: `));
-    row.append(el('b', null, r.player), el('span', 'wb-sub', ` ${r.pos}, ${r.team}${r[f.bid] ? ` · ${r[f.bid]}` : ''}`));
+    const b = bid(r, l, l.sf).txt;
+    row.append(el('b', null, r.player), el('span', 'wb-sub', ` ${r.pos}, ${r.team}${b ? ` · ${b}` : ''}`));
     box.append(row);
   }
 }
@@ -136,7 +150,8 @@ function columns() {
     { f: 'player', label: 'Player', k: 'c-player' },
     { f: 'pos', label: 'Pos', k: 'c-sub' },
     { f: 'team', label: 'Team', k: 'c-sub wb-narrow-hide' },
-    { f: 'bid', label: 'Bid', k: 'c-faab', get: (r) => r[f.bid], sortGet: (r) => r[f.mid], title: (r) => r[f.basis] },
+    { f: 'bid', label: L && L.faab ? 'Your bid' : 'Bid', k: 'c-faab', get: (r) => bid(r, L, viewSf()).txt,
+      sortGet: (r) => bid(r, L, viewSf()).mid, title: (r) => bid(r, L, viewSf()).title },
   ];
   if (L) {
     if (L.faab) cols.push({ f: 'med', label: 'League median', num: true, k: 'c-med', get: (r) => medianFor(L, r.pos), fmt: pct });
@@ -223,9 +238,10 @@ function drawPickups() {
   tg.hidden = !!L;
   for (const b of tg.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.fmt === ui.fmt));
   const who = L ? `${L.name} is ${sf ? 'superflex' : '1-QB'}. ` : '';
+  const yourBid = L && L.faab && L.position ? ` Your bid is % of total budget, with outlets that quote % of what's left scaled to your ${pct(L.position.myRemainingPct)}.` : ' Bid is % of total budget.';
   $('pickups-note').textContent = sf
-    ? `${who}Ranked by how many outlets list a player and how high. Bid is % of total budget; QB bids are superflex bids.`
-    : `${who}1-QB rankings: QB bids are standard 1-QB bids, and QBs are ranked lower (they count about ${Math.round(100 * BOARD.qb_1qb_factor)}% as much as in superflex). Bid is % of total budget.`;
+    ? `${who}Ranked by how many outlets list a player and how high.${yourBid} QB bids are superflex bids.`
+    : `${who}1-QB rankings: QB bids are standard 1-QB bids, and QBs are ranked lower (they count about ${Math.round(100 * BOARD.qb_1qb_factor)}% as much as in superflex).${yourBid}`;
   const legend = $('pickups-legend');
   if (L) legend.textContent = ui.showTaken ? `All pickups for ${L.name}; rostered players are crossed out.` : `Open in ${L.name}, sorted by consensus.`;
   else {

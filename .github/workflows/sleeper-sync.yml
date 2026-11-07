@@ -1,0 +1,50 @@
+name: Sleeper sync
+
+# Pulls exact Sleeper JSON (rosters, FAAB, winning bids, trending adds, injuries) into sync/ so the
+# weekly waiver run can read it with git instead of WebFetch. Times are UTC: 13:20 is 5:20 AM Pacific
+# (before the Tuesday 8:35 AM run), 01:20 is 5:20 PM Pacific.
+on:
+  schedule:
+    - cron: "20 13 * * *"
+    - cron: "20 1 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/sleeper-sync.yml
+      - pipeline/sleeper_sync.py
+      - pipeline/sync_config.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sleeper-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pull from Sleeper
+        run: python3 pipeline/sleeper_sync.py sync
+      - name: Commit if anything changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sync
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "Sleeper sync $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1

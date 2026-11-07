@@ -1,0 +1,8 @@
+{
+  "user_id": "471931546073296896",
+  "leagues": [
+    {"key": "seacucks", "league_id": "1312106378013192192", "treat_as": "redraft"},
+    {"key": "bestie", "league_id": "1312106252326670336", "treat_as": "dynasty"},
+    {"key": "champions", "league_id": "1355756208052518912", "treat_as": "dynasty"}
+  ]
+}

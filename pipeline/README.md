@@ -4,6 +4,20 @@ The main copy of this pipeline, with Tony's own league steps, lives in his Claud
 ("Fantasy Football Waiver Manager", `claude/waiver/run-procedure.md`). This folder is the backup a
 scheduled run uses when it can't open that project. It refreshes only this site's two data files.
 
+## Sleeper sync (GitHub Actions)
+`.github/workflows/sleeper-sync.yml` runs `pipeline/sleeper_sync.py` twice a day (5:20 AM and 5:20 PM Pacific),
+whenever the script or `sync_config.json` changes, and on demand from the Actions tab ("Run workflow"). It
+commits exact Sleeper JSON to `sync/`:
+- `state.json`: NFL week and when the sync ran (`fetched_at`, UTC), plus any `problems`
+- `sleeper_<key>.json`: each league in `sync_config.json`, in `build.py`'s league-file shape
+  (roster player lists, starters, reserve, taxi, FAAB used; no owner ids or names)
+- `sleeper_bids.json`: every completed waiver claim this season, in `build.py`'s bids-file shape
+- `trending_add.json`: Sleeper's 50 most-added players, last 24 hours
+- `injuries.json`: offensive players with an injury designation or non-active status (refreshed once a day)
+
+A weekly run uses these instead of WebFetch when `state.json`'s `fetched_at` is under 30 hours old and its
+`week` matches. Add or remove a league by editing `sync_config.json`.
+
 ## Friends'-site-only refresh
 1. `mkdir -p /home/claude/waiver/{sources,faab,out}` and copy `build.py` and `export_site.py` there.
 2. Week: WebFetch `https://api.sleeper.app/v1/state/nfl?nocache=<unique>` and read `week` = N.
