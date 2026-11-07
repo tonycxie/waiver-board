@@ -1,0 +1,2451 @@
+{
+ "fetched_at": "2026-11-07T05:27:05+00:00",
+ "leagues": {
+  "1312106378013192192": {
+   "name": "Seattle Seacucks",
+   "season": 2026,
+   "budget": 100,
+   "waiver_type": 2,
+   "claims": [
+    {
+     "week": 1,
+     "player_id": "13301",
+     "bid": 10,
+     "roster_id": 6,
+     "created": 1789539608596
+    },
+    {
+     "week": 1,
+     "player_id": "3161",
+     "bid": 17,
+     "roster_id": 5,
+     "created": 1789498495659
+    },
+    {
+     "week": 1,
+     "player_id": "12492",
+     "bid": 8,
+     "roster_id": 2,
+     "created": 1789492709349
+    },
+    {
+     "week": 1,
+     "player_id": "SF",
+     "bid": 1,
+     "roster_id": 2,
+     "created": 1789492685000
+    },
+    {
+     "week": 1,
+     "player_id": "3286",
+     "bid": 5,
+     "roster_id": 10,
+     "created": 1789491105241
+    },
+    {
+     "week": 1,
+     "player_id": "TB",
+     "bid": 8,
+     "roster_id": 6,
+     "created": 1789486334027
+    },
+    {
+     "week": 1,
+     "player_id": "11834",
+     "bid": 67,
+     "roster_id": 5,
+     "created": 1789330964377
+    },
+    {
+     "week": 1,
+     "player_id": "13285",
+     "bid": 5,
+     "roster_id": 5,
+     "created": 1789225277993
+    },
+    {
+     "week": 1,
+     "player_id": "5854",
+     "bid": 1,
+     "roster_id": 12,
+     "created": 1789072328641
+    },
+    {
+     "week": 1,
+     "player_id": "9482",
+     "bid": 3,
+     "roster_id": 2,
+     "created": 1788985246905
+    },
+    {
+     "week": 1,
+     "player_id": "6768",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1788281235855
+    },
+    {
+     "week": 2,
+     "player_id": "12493",
+     "bid": 15,
+     "roster_id": 3,
+     "created": 1790137421542
+    },
+    {
+     "week": 2,
+     "player_id": "11610",
+     "bid": 12,
+     "roster_id": 3,
+     "created": 1790137382169
+    },
+    {
+     "week": 2,
+     "player_id": "2306",
+     "bid": 19,
+     "roster_id": 2,
+     "created": 1790104705577
+    },
+    {
+     "week": 2,
+     "player_id": "8110",
+     "bid": 11,
+     "roster_id": 9,
+     "created": 1790092718404
+    },
+    {
+     "week": 2,
+     "player_id": "1166",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1790090080679
+    },
+    {
+     "week": 2,
+     "player_id": "10213",
+     "bid": 10,
+     "roster_id": 10,
+     "created": 1790088920090
+    },
+    {
+     "week": 2,
+     "player_id": "11435",
+     "bid": 22,
+     "roster_id": 11,
+     "created": 1790087343752
+    },
+    {
+     "week": 2,
+     "player_id": "MIN",
+     "bid": 5,
+     "roster_id": 6,
+     "created": 1790007691435
+    },
+    {
+     "week": 2,
+     "player_id": "4035",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1789834315177
+    },
+    {
+     "week": 2,
+     "player_id": "7571",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1789771640529
+    },
+    {
+     "week": 2,
+     "player_id": "11637",
+     "bid": 16,
+     "roster_id": 11,
+     "created": 1789702027963
+    },
+    {
+     "week": 2,
+     "player_id": "3634",
+     "bid": 3,
+     "roster_id": 8,
+     "created": 1789575195524
+    },
+    {
+     "week": 2,
+     "player_id": "4993",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1789575122001
+    },
+    {
+     "week": 2,
+     "player_id": "GB",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1789574943093
+    },
+    {
+     "week": 3,
+     "player_id": "13311",
+     "bid": 12,
+     "roster_id": 3,
+     "created": 1790738634543
+    },
+    {
+     "week": 3,
+     "player_id": "1737",
+     "bid": 1,
+     "roster_id": 2,
+     "created": 1790730736052
+    },
+    {
+     "week": 3,
+     "player_id": "12487",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1790702208903
+    },
+    {
+     "week": 3,
+     "player_id": "CHI",
+     "bid": 1,
+     "roster_id": 2,
+     "created": 1790694271556
+    },
+    {
+     "week": 3,
+     "player_id": "4017",
+     "bid": 22,
+     "roster_id": 7,
+     "created": 1790661203508
+    },
+    {
+     "week": 3,
+     "player_id": "11581",
+     "bid": 14,
+     "roster_id": 7,
+     "created": 1790661185831
+    },
+    {
+     "week": 3,
+     "player_id": "5947",
+     "bid": 0,
+     "roster_id": 12,
+     "created": 1790660817636
+    },
+    {
+     "week": 3,
+     "player_id": "JAX",
+     "bid": 1,
+     "roster_id": 12,
+     "created": 1790660754800
+    },
+    {
+     "week": 3,
+     "player_id": "ARI",
+     "bid": 1,
+     "roster_id": 8,
+     "created": 1790659805293
+    },
+    {
+     "week": 3,
+     "player_id": "9757",
+     "bid": 9,
+     "roster_id": 8,
+     "created": 1790659292794
+    },
+    {
+     "week": 3,
+     "player_id": "11643",
+     "bid": 20,
+     "roster_id": 3,
+     "created": 1790657894094
+    },
+    {
+     "week": 3,
+     "player_id": "1479",
+     "bid": 13,
+     "roster_id": 3,
+     "created": 1790657853182
+    },
+    {
+     "week": 3,
+     "player_id": "12495",
+     "bid": 65,
+     "roster_id": 6,
+     "created": 1790626582791
+    },
+    {
+     "week": 3,
+     "player_id": "12718",
+     "bid": 5,
+     "roster_id": 11,
+     "created": 1790566401371
+    },
+    {
+     "week": 3,
+     "player_id": "11630",
+     "bid": 3,
+     "roster_id": 11,
+     "created": 1790546498163
+    },
+    {
+     "week": 3,
+     "player_id": "12487",
+     "bid": 13,
+     "roster_id": 3,
+     "created": 1790371501208
+    },
+    {
+     "week": 3,
+     "player_id": "BUF",
+     "bid": 1,
+     "roster_id": 3,
+     "created": 1790359974310
+    },
+    {
+     "week": 3,
+     "player_id": "CAR",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1790351142405
+    },
+    {
+     "week": 3,
+     "player_id": "CIN",
+     "bid": 2,
+     "roster_id": 1,
+     "created": 1790180741848
+    },
+    {
+     "week": 3,
+     "player_id": "11625",
+     "bid": 26,
+     "roster_id": 1,
+     "created": 1790171186153
+    },
+    {
+     "week": 4,
+     "player_id": "DAL",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1791352816578
+    },
+    {
+     "week": 4,
+     "player_id": "11577",
+     "bid": 47,
+     "roster_id": 7,
+     "created": 1791352809469
+    },
+    {
+     "week": 4,
+     "player_id": "4663",
+     "bid": 2,
+     "roster_id": 8,
+     "created": 1791352283607
+    },
+    {
+     "week": 4,
+     "player_id": "3321",
+     "bid": 5,
+     "roster_id": 8,
+     "created": 1791352177802
+    },
+    {
+     "week": 4,
+     "player_id": "12509",
+     "bid": 2,
+     "roster_id": 2,
+     "created": 1791333883820
+    },
+    {
+     "week": 4,
+     "player_id": "7083",
+     "bid": 50,
+     "roster_id": 4,
+     "created": 1791298891303
+    },
+    {
+     "week": 4,
+     "player_id": "13264",
+     "bid": 8,
+     "roster_id": 1,
+     "created": 1791263584167
+    },
+    {
+     "week": 4,
+     "player_id": "3271",
+     "bid": 2,
+     "roster_id": 11,
+     "created": 1791220700927
+    },
+    {
+     "week": 4,
+     "player_id": "5844",
+     "bid": 10,
+     "roster_id": 8,
+     "created": 1791165821457
+    },
+    {
+     "week": 4,
+     "player_id": "13301",
+     "bid": 3,
+     "roster_id": 11,
+     "created": 1791053053077
+    },
+    {
+     "week": 4,
+     "player_id": "CHI",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1791043835253
+    },
+    {
+     "week": 4,
+     "player_id": "11435",
+     "bid": 4,
+     "roster_id": 11,
+     "created": 1790981488475
+    },
+    {
+     "week": 4,
+     "player_id": "LV",
+     "bid": 2,
+     "roster_id": 3,
+     "created": 1790974428361
+    },
+    {
+     "week": 4,
+     "player_id": "11256",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1790971101839
+    },
+    {
+     "week": 4,
+     "player_id": "2505",
+     "bid": 2,
+     "roster_id": 10,
+     "created": 1790901111393
+    },
+    {
+     "week": 4,
+     "player_id": "7571",
+     "bid": 1,
+     "roster_id": 5,
+     "created": 1790876803053
+    },
+    {
+     "week": 4,
+     "player_id": "12509",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1790817036695
+    },
+    {
+     "week": 4,
+     "player_id": "12504",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1790803341265
+    },
+    {
+     "week": 4,
+     "player_id": "12472",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1790792464820
+    },
+    {
+     "week": 4,
+     "player_id": "4892",
+     "bid": 16,
+     "roster_id": 2,
+     "created": 1790786231177
+    },
+    {
+     "week": 4,
+     "player_id": "BUF",
+     "bid": 6,
+     "roster_id": 5,
+     "created": 1790785288057
+    },
+    {
+     "week": 4,
+     "player_id": "11603",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1790785239326
+    },
+    {
+     "week": 4,
+     "player_id": "11571",
+     "bid": 2,
+     "roster_id": 1,
+     "created": 1790776580587
+    },
+    {
+     "week": 5,
+     "player_id": "NO",
+     "bid": 0,
+     "roster_id": 8,
+     "created": 1791960605085
+    },
+    {
+     "week": 5,
+     "player_id": "13274",
+     "bid": 9,
+     "roster_id": 3,
+     "created": 1791958279509
+    },
+    {
+     "week": 5,
+     "player_id": "11647",
+     "bid": 5,
+     "roster_id": 7,
+     "created": 1791957193277
+    },
+    {
+     "week": 5,
+     "player_id": "9757",
+     "bid": 8,
+     "roster_id": 1,
+     "created": 1791936141113
+    },
+    {
+     "week": 5,
+     "player_id": "IND",
+     "bid": 1,
+     "roster_id": 12,
+     "created": 1791935144125
+    },
+    {
+     "week": 5,
+     "player_id": "11783",
+     "bid": 3,
+     "roster_id": 8,
+     "created": 1791916437390
+    },
+    {
+     "week": 5,
+     "player_id": "4147",
+     "bid": 1,
+     "roster_id": 2,
+     "created": 1791909993057
+    },
+    {
+     "week": 5,
+     "player_id": "12536",
+     "bid": 2,
+     "roster_id": 2,
+     "created": 1791909931152
+    },
+    {
+     "week": 5,
+     "player_id": "7600",
+     "bid": 12,
+     "roster_id": 5,
+     "created": 1791909012548
+    },
+    {
+     "week": 5,
+     "player_id": "BAL",
+     "bid": 1,
+     "roster_id": 7,
+     "created": 1791892426216
+    },
+    {
+     "week": 5,
+     "player_id": "8129",
+     "bid": 11,
+     "roster_id": 8,
+     "created": 1791838374989
+    },
+    {
+     "week": 5,
+     "player_id": "12504",
+     "bid": 0,
+     "roster_id": 8,
+     "created": 1791694447758
+    },
+    {
+     "week": 5,
+     "player_id": "19",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1791692551687
+    },
+    {
+     "week": 5,
+     "player_id": "13301",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1791528993669
+    },
+    {
+     "week": 5,
+     "player_id": "WAS",
+     "bid": 1,
+     "roster_id": 3,
+     "created": 1791434598902
+    },
+    {
+     "week": 5,
+     "player_id": "9502",
+     "bid": 1,
+     "roster_id": 3,
+     "created": 1791396995018
+    },
+    {
+     "week": 5,
+     "player_id": "NE",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1791389742764
+    },
+    {
+     "week": 6,
+     "player_id": "13296",
+     "bid": 6,
+     "roster_id": 1,
+     "created": 1792559251560
+    },
+    {
+     "week": 6,
+     "player_id": "3214",
+     "bid": 2,
+     "roster_id": 9,
+     "created": 1792548852420
+    },
+    {
+     "week": 6,
+     "player_id": "9502",
+     "bid": 8,
+     "roster_id": 11,
+     "created": 1792543798331
+    },
+    {
+     "week": 6,
+     "player_id": "11655",
+     "bid": 2,
+     "roster_id": 2,
+     "created": 1792518805864
+    },
+    {
+     "week": 6,
+     "player_id": "NYJ",
+     "bid": 1,
+     "roster_id": 2,
+     "created": 1792513516849
+    },
+    {
+     "week": 6,
+     "player_id": "CLE",
+     "bid": 7,
+     "roster_id": 3,
+     "created": 1792513240500
+    },
+    {
+     "week": 6,
+     "player_id": "6039",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1792513140156
+    },
+    {
+     "week": 6,
+     "player_id": "13424",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1792513124926
+    },
+    {
+     "week": 6,
+     "player_id": "11565",
+     "bid": 20,
+     "roster_id": 9,
+     "created": 1792479341459
+    },
+    {
+     "week": 6,
+     "player_id": "12536",
+     "bid": 11,
+     "roster_id": 8,
+     "created": 1792475374618
+    },
+    {
+     "week": 6,
+     "player_id": "12718",
+     "bid": 6,
+     "roster_id": 8,
+     "created": 1792471249741
+    },
+    {
+     "week": 6,
+     "player_id": "9501",
+     "bid": 14,
+     "roster_id": 11,
+     "created": 1792470898501
+    },
+    {
+     "week": 6,
+     "player_id": "13311",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1792285078072
+    },
+    {
+     "week": 6,
+     "player_id": "CAR",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1792188095144
+    },
+    {
+     "week": 6,
+     "player_id": "13330",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1792184455772
+    },
+    {
+     "week": 6,
+     "player_id": "JAX",
+     "bid": 1,
+     "roster_id": 1,
+     "created": 1792074670197
+    },
+    {
+     "week": 6,
+     "player_id": "7553",
+     "bid": 3,
+     "roster_id": 5,
+     "created": 1792006302174
+    },
+    {
+     "week": 6,
+     "player_id": "SF",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1791994233572
+    },
+    {
+     "week": 6,
+     "player_id": "1737",
+     "bid": 2,
+     "roster_id": 11,
+     "created": 1791985006244
+    },
+    {
+     "week": 7,
+     "player_id": "6130",
+     "bid": 3,
+     "roster_id": 2,
+     "created": 1793124662786
+    },
+    {
+     "week": 7,
+     "player_id": "11583",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1793117711445
+    },
+    {
+     "week": 7,
+     "player_id": "12469",
+     "bid": 4,
+     "roster_id": 2,
+     "created": 1793110728711
+    },
+    {
+     "week": 7,
+     "player_id": "4454",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1793081090236
+    },
+    {
+     "week": 7,
+     "player_id": "8172",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1793034115795
+    },
+    {
+     "week": 7,
+     "player_id": "NE",
+     "bid": 2,
+     "roster_id": 8,
+     "created": 1792985397909
+    },
+    {
+     "week": 7,
+     "player_id": "KC",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1792861175950
+    },
+    {
+     "week": 7,
+     "player_id": "11435",
+     "bid": 0,
+     "roster_id": 11,
+     "created": 1792804438886
+    },
+    {
+     "week": 7,
+     "player_id": "13317",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1792792472719
+    },
+    {
+     "week": 7,
+     "player_id": "8135",
+     "bid": 0,
+     "roster_id": 11,
+     "created": 1792786426944
+    },
+    {
+     "week": 7,
+     "player_id": "8122",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1792642284175
+    },
+    {
+     "week": 7,
+     "player_id": "10235",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1792602575533
+    },
+    {
+     "week": 7,
+     "player_id": "TEN",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1792600543343
+    },
+    {
+     "week": 8,
+     "player_id": "13285",
+     "bid": 1,
+     "roster_id": 8,
+     "created": 1793770910137
+    },
+    {
+     "week": 8,
+     "player_id": "TB",
+     "bid": 1,
+     "roster_id": 8,
+     "created": 1793763214673
+    },
+    {
+     "week": 8,
+     "player_id": "13425",
+     "bid": 0,
+     "roster_id": 11,
+     "created": 1793751702286
+    },
+    {
+     "week": 8,
+     "player_id": "8132",
+     "bid": 26,
+     "roster_id": 12,
+     "created": 1793741032423
+    },
+    {
+     "week": 8,
+     "player_id": "3161",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1793677103857
+    },
+    {
+     "week": 8,
+     "player_id": "6011",
+     "bid": 21,
+     "roster_id": 11,
+     "created": 1793667873480
+    },
+    {
+     "week": 8,
+     "player_id": "13350",
+     "bid": 20,
+     "roster_id": 10,
+     "created": 1793662008467
+    },
+    {
+     "week": 8,
+     "player_id": "4037",
+     "bid": 0,
+     "roster_id": 8,
+     "created": 1793466585457
+    },
+    {
+     "week": 8,
+     "player_id": "11631",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1793378439916
+    },
+    {
+     "week": 8,
+     "player_id": "11603",
+     "bid": 1,
+     "roster_id": 10,
+     "created": 1793304566158
+    },
+    {
+     "week": 8,
+     "player_id": "11729",
+     "bid": 3,
+     "roster_id": 8,
+     "created": 1793223347593
+    },
+    {
+     "week": 8,
+     "player_id": "4147",
+     "bid": 5,
+     "roster_id": 8,
+     "created": 1793223136968
+    },
+    {
+     "week": 8,
+     "player_id": "WAS",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1793205845841
+    },
+    {
+     "week": 9,
+     "player_id": "12491",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1793980655858
+    },
+    {
+     "week": 9,
+     "player_id": "11647",
+     "bid": 3,
+     "roster_id": 8,
+     "created": 1793932421669
+    },
+    {
+     "week": 9,
+     "player_id": "12510",
+     "bid": 0,
+     "roster_id": 11,
+     "created": 1793850974244
+    },
+    {
+     "week": 9,
+     "player_id": "11557",
+     "bid": 29,
+     "roster_id": 10,
+     "created": 1793850934623
+    },
+    {
+     "week": 9,
+     "player_id": "5854",
+     "bid": 10,
+     "roster_id": 8,
+     "created": 1793819503593
+    },
+    {
+     "week": 9,
+     "player_id": "12524",
+     "bid": 2,
+     "roster_id": 3,
+     "created": 1793812114568
+    },
+    {
+     "week": 9,
+     "player_id": "11625",
+     "bid": 8,
+     "roster_id": 9,
+     "created": 1793811802105
+    },
+    {
+     "week": 9,
+     "player_id": "13302",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1793809711609
+    },
+    {
+     "week": 9,
+     "player_id": "NYG",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1793801023958
+    }
+   ]
+  },
+  "1312106252326670336": {
+   "name": "Bestie Balls: Ride or Die Nasty",
+   "season": 2026,
+   "budget": 1000,
+   "waiver_type": 2,
+   "claims": [
+    {
+     "week": 1,
+     "player_id": "11199",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1789486488716
+    },
+    {
+     "week": 1,
+     "player_id": "9757",
+     "bid": 75,
+     "roster_id": 6,
+     "created": 1789410662270
+    },
+    {
+     "week": 1,
+     "player_id": "5854",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1789400311001
+    },
+    {
+     "week": 1,
+     "player_id": "13394",
+     "bid": 20,
+     "roster_id": 10,
+     "created": 1789357136766
+    },
+    {
+     "week": 1,
+     "player_id": "3634",
+     "bid": 50,
+     "roster_id": 10,
+     "created": 1789356779780
+    },
+    {
+     "week": 1,
+     "player_id": "3161",
+     "bid": 200,
+     "roster_id": 9,
+     "created": 1789345400437
+    },
+    {
+     "week": 1,
+     "player_id": "4177",
+     "bid": 40,
+     "roster_id": 10,
+     "created": 1789197070735
+    },
+    {
+     "week": 1,
+     "player_id": "8127",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1789161180692
+    },
+    {
+     "week": 1,
+     "player_id": "10235",
+     "bid": 0,
+     "roster_id": 4,
+     "created": 1788937650937
+    },
+    {
+     "week": 1,
+     "player_id": "6271",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1788920512556
+    },
+    {
+     "week": 1,
+     "player_id": "10218",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1788920415237
+    },
+    {
+     "week": 1,
+     "player_id": "8225",
+     "bid": 1,
+     "roster_id": 10,
+     "created": 1788330597871
+    },
+    {
+     "week": 1,
+     "player_id": "7571",
+     "bid": 1,
+     "roster_id": 10,
+     "created": 1788330495804
+    },
+    {
+     "week": 1,
+     "player_id": "12048",
+     "bid": 107,
+     "roster_id": 5,
+     "created": 1788296537906
+    },
+    {
+     "week": 1,
+     "player_id": "13425",
+     "bid": 950,
+     "roster_id": 6,
+     "created": 1788292463160
+    },
+    {
+     "week": 1,
+     "player_id": "11370",
+     "bid": 102,
+     "roster_id": 5,
+     "created": 1788201531620
+    },
+    {
+     "week": 1,
+     "player_id": "11237",
+     "bid": 0,
+     "roster_id": 12,
+     "created": 1788194797049
+    },
+    {
+     "week": 1,
+     "player_id": "7600",
+     "bid": 110,
+     "roster_id": 4,
+     "created": 1788115671488
+    },
+    {
+     "week": 1,
+     "player_id": "13264",
+     "bid": 0,
+     "roster_id": 12,
+     "created": 1788025253879
+    },
+    {
+     "week": 1,
+     "player_id": "13602",
+     "bid": 950,
+     "roster_id": 1,
+     "created": 1787875229634
+    },
+    {
+     "week": 1,
+     "player_id": "4039",
+     "bid": 100,
+     "roster_id": 9,
+     "created": 1787844117609
+    },
+    {
+     "week": 1,
+     "player_id": "4454",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1787844094108
+    },
+    {
+     "week": 1,
+     "player_id": "10218",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1787774186321
+    },
+    {
+     "week": 1,
+     "player_id": "8172",
+     "bid": 2,
+     "roster_id": 5,
+     "created": 1787774004507
+    },
+    {
+     "week": 1,
+     "player_id": "13329",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1787195806930
+    },
+    {
+     "week": 1,
+     "player_id": "13315",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1786942733157
+    },
+    {
+     "week": 1,
+     "player_id": "13415",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1786318847857
+    },
+    {
+     "week": 1,
+     "player_id": "13424",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1786133692422
+    },
+    {
+     "week": 1,
+     "player_id": "13533",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1786133660976
+    },
+    {
+     "week": 1,
+     "player_id": "13413",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1785396019855
+    },
+    {
+     "week": 1,
+     "player_id": "9486",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1780328781680
+    },
+    {
+     "week": 1,
+     "player_id": "4017",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1780328716496
+    },
+    {
+     "week": 1,
+     "player_id": "12467",
+     "bid": 6,
+     "roster_id": 5,
+     "created": 1780328695091
+    },
+    {
+     "week": 1,
+     "player_id": "13420",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1779952295457
+    },
+    {
+     "week": 1,
+     "player_id": "13306",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1779952211868
+    },
+    {
+     "week": 1,
+     "player_id": "13333",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1779952188501
+    },
+    {
+     "week": 1,
+     "player_id": "13411",
+     "bid": 50,
+     "roster_id": 1,
+     "created": 1779901450532
+    },
+    {
+     "week": 1,
+     "player_id": "12511",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1775373874097
+    },
+    {
+     "week": 1,
+     "player_id": "10216",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1775373798595
+    },
+    {
+     "week": 1,
+     "player_id": "11256",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1773082697604
+    },
+    {
+     "week": 1,
+     "player_id": "8180",
+     "bid": 48,
+     "roster_id": 5,
+     "created": 1773081785440
+    },
+    {
+     "week": 1,
+     "player_id": "11619",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1768263197989
+    },
+    {
+     "week": 1,
+     "player_id": "3286",
+     "bid": 0,
+     "roster_id": 10,
+     "created": 1768231818968
+    },
+    {
+     "week": 1,
+     "player_id": "13079",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1767717027631
+    },
+    {
+     "week": 1,
+     "player_id": "9757",
+     "bid": 0,
+     "roster_id": 12,
+     "created": 1767672341666
+    },
+    {
+     "week": 1,
+     "player_id": "12470",
+     "bid": 50,
+     "roster_id": 6,
+     "created": 1767566962104
+    },
+    {
+     "week": 2,
+     "player_id": "1339",
+     "bid": 0,
+     "roster_id": 4,
+     "created": 1790107733146
+    },
+    {
+     "week": 2,
+     "player_id": "2306",
+     "bid": 124,
+     "roster_id": 5,
+     "created": 1790091184404
+    },
+    {
+     "week": 2,
+     "player_id": "2307",
+     "bid": 63,
+     "roster_id": 5,
+     "created": 1790091151052
+    },
+    {
+     "week": 2,
+     "player_id": "11577",
+     "bid": 12,
+     "roster_id": 5,
+     "created": 1790091106935
+    },
+    {
+     "week": 2,
+     "player_id": "11256",
+     "bid": 100,
+     "roster_id": 1,
+     "created": 1790019572994
+    },
+    {
+     "week": 2,
+     "player_id": "6931",
+     "bid": 2,
+     "roster_id": 5,
+     "created": 1789620632692
+    },
+    {
+     "week": 2,
+     "player_id": "8188",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1789594373648
+    },
+    {
+     "week": 2,
+     "player_id": "12472",
+     "bid": 15,
+     "roster_id": 10,
+     "created": 1789583776086
+    },
+    {
+     "week": 3,
+     "player_id": "1737",
+     "bid": 123,
+     "roster_id": 4,
+     "created": 1790748223621
+    },
+    {
+     "week": 3,
+     "player_id": "12718",
+     "bid": 7,
+     "roster_id": 5,
+     "created": 1790742848004
+    },
+    {
+     "week": 3,
+     "player_id": "4663",
+     "bid": 11,
+     "roster_id": 5,
+     "created": 1790711027115
+    },
+    {
+     "week": 3,
+     "player_id": "11643",
+     "bid": 172,
+     "roster_id": 5,
+     "created": 1790710967193
+    },
+    {
+     "week": 3,
+     "player_id": "3271",
+     "bid": 67,
+     "roster_id": 4,
+     "created": 1790661410735
+    },
+    {
+     "week": 3,
+     "player_id": "8172",
+     "bid": 20,
+     "roster_id": 10,
+     "created": 1790568063183
+    },
+    {
+     "week": 3,
+     "player_id": "11608",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1790434846606
+    },
+    {
+     "week": 3,
+     "player_id": "6828",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1790434742054
+    },
+    {
+     "week": 3,
+     "player_id": "13423",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1790368381776
+    },
+    {
+     "week": 3,
+     "player_id": "11370",
+     "bid": 0,
+     "roster_id": 4,
+     "created": 1790167696354
+    },
+    {
+     "week": 3,
+     "player_id": "12048",
+     "bid": 0,
+     "roster_id": 4,
+     "created": 1790167674876
+    },
+    {
+     "week": 3,
+     "player_id": "6149",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1790167552021
+    },
+    {
+     "week": 4,
+     "player_id": "11577",
+     "bid": 220,
+     "roster_id": 4,
+     "created": 1791352860631
+    },
+    {
+     "week": 4,
+     "player_id": "7083",
+     "bid": 23,
+     "roster_id": 5,
+     "created": 1791334062946
+    },
+    {
+     "week": 4,
+     "player_id": "13150",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1791069777070
+    },
+    {
+     "week": 4,
+     "player_id": "8180",
+     "bid": 1,
+     "roster_id": 9,
+     "created": 1790957395168
+    },
+    {
+     "week": 4,
+     "player_id": "3321",
+     "bid": 120,
+     "roster_id": 10,
+     "created": 1790863087975
+    },
+    {
+     "week": 4,
+     "player_id": "12524",
+     "bid": 146,
+     "roster_id": 5,
+     "created": 1790830369409
+    },
+    {
+     "week": 4,
+     "player_id": "13277",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1790803604667
+    },
+    {
+     "week": 4,
+     "player_id": "11729",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1790774126672
+    },
+    {
+     "week": 4,
+     "player_id": "11565",
+     "bid": 0,
+     "roster_id": 12,
+     "created": 1790752396294
+    },
+    {
+     "week": 5,
+     "player_id": "12542",
+     "bid": 152,
+     "roster_id": 4,
+     "created": 1791957517704
+    },
+    {
+     "week": 5,
+     "player_id": "12491",
+     "bid": 1,
+     "roster_id": 1,
+     "created": 1791922534757
+    },
+    {
+     "week": 5,
+     "player_id": "12496",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1791656952836
+    },
+    {
+     "week": 5,
+     "player_id": "8129",
+     "bid": 1,
+     "roster_id": 5,
+     "created": 1791596939806
+    },
+    {
+     "week": 5,
+     "player_id": "10235",
+     "bid": 22,
+     "roster_id": 5,
+     "created": 1791596814071
+    },
+    {
+     "week": 6,
+     "player_id": "11655",
+     "bid": 32,
+     "roster_id": 5,
+     "created": 1792518080548
+    },
+    {
+     "week": 6,
+     "player_id": "12718",
+     "bid": 199,
+     "roster_id": 1,
+     "created": 1792446293649
+    },
+    {
+     "week": 6,
+     "player_id": "8116",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1792296888993
+    },
+    {
+     "week": 6,
+     "player_id": "11557",
+     "bid": 155,
+     "roster_id": 10,
+     "created": 1792217285500
+    },
+    {
+     "week": 6,
+     "player_id": "9230",
+     "bid": 201,
+     "roster_id": 1,
+     "created": 1792084406126
+    },
+    {
+     "week": 7,
+     "player_id": "7561",
+     "bid": 41,
+     "roster_id": 4,
+     "created": 1793166978773
+    },
+    {
+     "week": 7,
+     "player_id": "4066",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1793146276886
+    },
+    {
+     "week": 7,
+     "player_id": "8119",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1793146221729
+    },
+    {
+     "week": 7,
+     "player_id": "12491",
+     "bid": 0,
+     "roster_id": 12,
+     "created": 1793079311367
+    },
+    {
+     "week": 7,
+     "player_id": "11643",
+     "bid": 0,
+     "roster_id": 12,
+     "created": 1792912309475
+    },
+    {
+     "week": 7,
+     "player_id": "4950",
+     "bid": 14,
+     "roster_id": 5,
+     "created": 1792868194347
+    },
+    {
+     "week": 7,
+     "player_id": "2197",
+     "bid": 20,
+     "roster_id": 9,
+     "created": 1792739235244
+    },
+    {
+     "week": 7,
+     "player_id": "8122",
+     "bid": 0,
+     "roster_id": 12,
+     "created": 1792720343209
+    },
+    {
+     "week": 7,
+     "player_id": "7694",
+     "bid": 0,
+     "roster_id": 12,
+     "created": 1792611129701
+    },
+    {
+     "week": 7,
+     "player_id": "8116",
+     "bid": 52,
+     "roster_id": 4,
+     "created": 1792566532175
+    },
+    {
+     "week": 7,
+     "player_id": "8135",
+     "bid": 0,
+     "roster_id": 4,
+     "created": 1792566504124
+    },
+    {
+     "week": 8,
+     "player_id": "3161",
+     "bid": 13,
+     "roster_id": 5,
+     "created": 1793750081225
+    },
+    {
+     "week": 8,
+     "player_id": "6011",
+     "bid": 400,
+     "roster_id": 12,
+     "created": 1793744172574
+    },
+    {
+     "week": 8,
+     "player_id": "12457",
+     "bid": 7,
+     "roster_id": 5,
+     "created": 1793291629689
+    },
+    {
+     "week": 8,
+     "player_id": "12482",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1793227886173
+    },
+    {
+     "week": 8,
+     "player_id": "12483",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1793190225405
+    },
+    {
+     "week": 9,
+     "player_id": "4663",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1793866178895
+    },
+    {
+     "week": 9,
+     "player_id": "7828",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1793866157492
+    },
+    {
+     "week": 9,
+     "player_id": "11729",
+     "bid": 11,
+     "roster_id": 1,
+     "created": 1793837575578
+    }
+   ]
+  },
+  "1355756208052518912": {
+   "name": "\ud83e\udd47Dynasty: League of Champions",
+   "season": 2026,
+   "budget": 1000,
+   "waiver_type": 2,
+   "claims": [
+    {
+     "week": 1,
+     "player_id": "9501",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1789530222664
+    },
+    {
+     "week": 1,
+     "player_id": "11729",
+     "bid": 0,
+     "roster_id": 10,
+     "created": 1789530076156
+    },
+    {
+     "week": 1,
+     "player_id": "4177",
+     "bid": 62,
+     "roster_id": 9,
+     "created": 1789490019444
+    },
+    {
+     "week": 1,
+     "player_id": "3634",
+     "bid": 50,
+     "roster_id": 5,
+     "created": 1789485568580
+    },
+    {
+     "week": 1,
+     "player_id": "3161",
+     "bid": 157,
+     "roster_id": 3,
+     "created": 1789456102843
+    },
+    {
+     "week": 1,
+     "player_id": "3286",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1789446726754
+    },
+    {
+     "week": 1,
+     "player_id": "11630",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1789446719457
+    },
+    {
+     "week": 1,
+     "player_id": "9757",
+     "bid": 55,
+     "roster_id": 2,
+     "created": 1789446714812
+    },
+    {
+     "week": 1,
+     "player_id": "4454",
+     "bid": 10,
+     "roster_id": 5,
+     "created": 1789420987558
+    },
+    {
+     "week": 1,
+     "player_id": "6130",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1789420317108
+    },
+    {
+     "week": 1,
+     "player_id": "9482",
+     "bid": 50,
+     "roster_id": 5,
+     "created": 1789073100854
+    },
+    {
+     "week": 1,
+     "player_id": "7571",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1788984548715
+    },
+    {
+     "week": 1,
+     "player_id": "1166",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1788920604153
+    },
+    {
+     "week": 1,
+     "player_id": "11647",
+     "bid": 15,
+     "roster_id": 8,
+     "created": 1788764910993
+    },
+    {
+     "week": 1,
+     "player_id": "11625",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1788764277476
+    },
+    {
+     "week": 1,
+     "player_id": "10235",
+     "bid": 456,
+     "roster_id": 10,
+     "created": 1788586513690
+    },
+    {
+     "week": 1,
+     "player_id": "11237",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1788371538999
+    },
+    {
+     "week": 1,
+     "player_id": "4039",
+     "bid": 0,
+     "roster_id": 4,
+     "created": 1788323971493
+    },
+    {
+     "week": 1,
+     "player_id": "13415",
+     "bid": 1,
+     "roster_id": 7,
+     "created": 1788318438200
+    },
+    {
+     "week": 1,
+     "player_id": "13425",
+     "bid": 690,
+     "roster_id": 7,
+     "created": 1788160112180
+    },
+    {
+     "week": 1,
+     "player_id": "13726",
+     "bid": 69,
+     "roster_id": 7,
+     "created": 1788158955400
+    },
+    {
+     "week": 1,
+     "player_id": "13264",
+     "bid": 400,
+     "roster_id": 2,
+     "created": 1788148201691
+    },
+    {
+     "week": 1,
+     "player_id": "5001",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1788117039873
+    },
+    {
+     "week": 1,
+     "player_id": "11834",
+     "bid": 2,
+     "roster_id": 9,
+     "created": 1787981440455
+    },
+    {
+     "week": 1,
+     "player_id": "9504",
+     "bid": 400,
+     "roster_id": 2,
+     "created": 1787600012922
+    },
+    {
+     "week": 1,
+     "player_id": "12048",
+     "bid": 22,
+     "roster_id": 8,
+     "created": 1787588659917
+    },
+    {
+     "week": 1,
+     "player_id": "13602",
+     "bid": 150,
+     "roster_id": 2,
+     "created": 1787548246580
+    },
+    {
+     "week": 1,
+     "player_id": "8800",
+     "bid": 69,
+     "roster_id": 10,
+     "created": 1787535417307
+    },
+    {
+     "week": 1,
+     "player_id": "10218",
+     "bid": 12,
+     "roster_id": 10,
+     "created": 1787209477318
+    },
+    {
+     "week": 1,
+     "player_id": "7528",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1787123225624
+    },
+    {
+     "week": 1,
+     "player_id": "1479",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1787037112544
+    },
+    {
+     "week": 1,
+     "player_id": "13315",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1786982043199
+    },
+    {
+     "week": 1,
+     "player_id": "9486",
+     "bid": 13,
+     "roster_id": 10,
+     "created": 1786865607963
+    },
+    {
+     "week": 1,
+     "player_id": "2505",
+     "bid": 0,
+     "roster_id": 4,
+     "created": 1786820885895
+    },
+    {
+     "week": 1,
+     "player_id": "5001",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1786319146464
+    },
+    {
+     "week": 1,
+     "player_id": "5995",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1785338474317
+    },
+    {
+     "week": 1,
+     "player_id": "4137",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1785275754850
+    },
+    {
+     "week": 1,
+     "player_id": "13477",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1785260888597
+    },
+    {
+     "week": 1,
+     "player_id": "12048",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1784743454222
+    },
+    {
+     "week": 1,
+     "player_id": "8135",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1784690524271
+    },
+    {
+     "week": 1,
+     "player_id": "8172",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1782159652725
+    },
+    {
+     "week": 1,
+     "player_id": "12462",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1779866862643
+    },
+    {
+     "week": 1,
+     "player_id": "7528",
+     "bid": 10,
+     "roster_id": 2,
+     "created": 1779856490476
+    },
+    {
+     "week": 1,
+     "player_id": "11581",
+     "bid": 1000,
+     "roster_id": 4,
+     "created": 1779834946794
+    },
+    {
+     "week": 1,
+     "player_id": "3257",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1779374751702
+    },
+    {
+     "week": 1,
+     "player_id": "13533",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1779262362583
+    },
+    {
+     "week": 1,
+     "player_id": "13322",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1779220004452
+    },
+    {
+     "week": 1,
+     "player_id": "13413",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1778433340691
+    },
+    {
+     "week": 1,
+     "player_id": "13303",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1778293654527
+    },
+    {
+     "week": 1,
+     "player_id": "12499",
+     "bid": 11,
+     "roster_id": 9,
+     "created": 1778255581658
+    },
+    {
+     "week": 1,
+     "player_id": "3214",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1778223966364
+    },
+    {
+     "week": 1,
+     "player_id": "8172",
+     "bid": 1,
+     "roster_id": 2,
+     "created": 1778216601555
+    },
+    {
+     "week": 1,
+     "player_id": "13324",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1778215990704
+    },
+    {
+     "week": 1,
+     "player_id": "7528",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1778214935709
+    },
+    {
+     "week": 2,
+     "player_id": "8188",
+     "bid": 2,
+     "roster_id": 10,
+     "created": 1790135457996
+    },
+    {
+     "week": 2,
+     "player_id": "4035",
+     "bid": 75,
+     "roster_id": 5,
+     "created": 1790134698875
+    },
+    {
+     "week": 2,
+     "player_id": "2306",
+     "bid": 420,
+     "roster_id": 9,
+     "created": 1790105596668
+    },
+    {
+     "week": 2,
+     "player_id": "11435",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1790085313097
+    },
+    {
+     "week": 2,
+     "player_id": "10218",
+     "bid": 0,
+     "roster_id": 10,
+     "created": 1789783818203
+    },
+    {
+     "week": 2,
+     "player_id": "12472",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1789600456505
+    },
+    {
+     "week": 2,
+     "player_id": "11370",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1789574574968
+    },
+    {
+     "week": 3,
+     "player_id": "13277",
+     "bid": 27,
+     "roster_id": 10,
+     "created": 1790750798128
+    },
+    {
+     "week": 3,
+     "player_id": "12718",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1790727682883
+    },
+    {
+     "week": 3,
+     "player_id": "4147",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1790720428385
+    },
+    {
+     "week": 3,
+     "player_id": "2307",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1790167645795
+    },
+    {
+     "week": 3,
+     "player_id": "5854",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1790167488315
+    },
+    {
+     "week": 4,
+     "player_id": "13150",
+     "bid": 13,
+     "roster_id": 10,
+     "created": 1791354997658
+    },
+    {
+     "week": 4,
+     "player_id": "11577",
+     "bid": 312,
+     "roster_id": 4,
+     "created": 1791354869351
+    },
+    {
+     "week": 4,
+     "player_id": "11256",
+     "bid": 140,
+     "roster_id": 3,
+     "created": 1791352484292
+    },
+    {
+     "week": 4,
+     "player_id": "4993",
+     "bid": 67,
+     "roster_id": 3,
+     "created": 1791317596626
+    },
+    {
+     "week": 4,
+     "player_id": "3271",
+     "bid": 100,
+     "roster_id": 1,
+     "created": 1791299955412
+    },
+    {
+     "week": 4,
+     "player_id": "3321",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1791263974567
+    },
+    {
+     "week": 4,
+     "player_id": "4018",
+     "bid": 101,
+     "roster_id": 8,
+     "created": 1791132946538
+    },
+    {
+     "week": 4,
+     "player_id": "5857",
+     "bid": 0,
+     "roster_id": 6,
+     "created": 1790788772017
+    },
+    {
+     "week": 5,
+     "player_id": "7600",
+     "bid": 42,
+     "roster_id": 9,
+     "created": 1791948843725
+    },
+    {
+     "week": 5,
+     "player_id": "6039",
+     "bid": 22,
+     "roster_id": 9,
+     "created": 1791948796126
+    },
+    {
+     "week": 5,
+     "player_id": "12542",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1791914957334
+    },
+    {
+     "week": 5,
+     "player_id": "8129",
+     "bid": 100,
+     "roster_id": 2,
+     "created": 1791911409836
+    },
+    {
+     "week": 5,
+     "player_id": "10235",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1791664150495
+    },
+    {
+     "week": 5,
+     "player_id": "4663",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1791409214384
+    },
+    {
+     "week": 5,
+     "player_id": "7528",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1791407473403
+    },
+    {
+     "week": 5,
+     "player_id": "7083",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1791407467126
+    },
+    {
+     "week": 6,
+     "player_id": "11655",
+     "bid": 35,
+     "roster_id": 3,
+     "created": 1792566142622
+    },
+    {
+     "week": 6,
+     "player_id": "8119",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1792531421841
+    },
+    {
+     "week": 6,
+     "player_id": "9230",
+     "bid": 151,
+     "roster_id": 2,
+     "created": 1792531404877
+    },
+    {
+     "week": 6,
+     "player_id": "8135",
+     "bid": 200,
+     "roster_id": 1,
+     "created": 1792523868280
+    },
+    {
+     "week": 6,
+     "player_id": "11783",
+     "bid": 200,
+     "roster_id": 1,
+     "created": 1792523619834
+    },
+    {
+     "week": 6,
+     "player_id": "4454",
+     "bid": 25,
+     "roster_id": 5,
+     "created": 1792163385423
+    },
+    {
+     "week": 6,
+     "player_id": "13394",
+     "bid": 25,
+     "roster_id": 5,
+     "created": 1792094005006
+    },
+    {
+     "week": 7,
+     "player_id": "13150",
+     "bid": 1,
+     "roster_id": 10,
+     "created": 1792909755378
+    },
+    {
+     "week": 7,
+     "player_id": "8116",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1792706108777
+    },
+    {
+     "week": 7,
+     "player_id": "8122",
+     "bid": 111,
+     "roster_id": 2,
+     "created": 1792706059526
+    },
+    {
+     "week": 7,
+     "player_id": "7083",
+     "bid": 201,
+     "roster_id": 10,
+     "created": 1792633989172
+    },
+    {
+     "week": 7,
+     "player_id": "13338",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1792608704303
+    },
+    {
+     "week": 7,
+     "player_id": "13273",
+     "bid": 0,
+     "roster_id": 9,
+     "created": 1792608621743
+    },
+    {
+     "week": 8,
+     "player_id": "12491",
+     "bid": 27,
+     "roster_id": 10,
+     "created": 1793737116349
+    },
+    {
+     "week": 8,
+     "player_id": "4039",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1793513956408
+    },
+    {
+     "week": 8,
+     "player_id": "10219",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1793477954641
+    },
+    {
+     "week": 8,
+     "player_id": "8111",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1793469288262
+    },
+    {
+     "week": 8,
+     "player_id": "7561",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1793228485458
+    },
+    {
+     "week": 9,
+     "player_id": "12467",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1793860316189
+    },
+    {
+     "week": 9,
+     "player_id": "5854",
+     "bid": 1,
+     "roster_id": 2,
+     "created": 1793860285479
+    },
+    {
+     "week": 9,
+     "player_id": "11557",
+     "bid": 365,
+     "roster_id": 5,
+     "created": 1793823268796
+    }
+   ]
+  }
+ }
+}
