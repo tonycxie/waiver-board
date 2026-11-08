@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-07T05:27:05+00:00",
+ "fetched_at": "2026-11-08T07:28:35+00:00",
  "players": {
   "10212": {
    "name": "Josh Whyle",
@@ -176,13 +176,6 @@
    "injury_status": "IR",
    "status": "Inactive"
   },
-  "11637": {
-   "name": "Keon Coleman",
-   "pos": "WR",
-   "team": "BUF",
-   "injury_status": "Questionable",
-   "status": "Active"
-  },
   "11638": {
    "name": "Ricky Pearsall",
    "pos": "WR",
@@ -313,8 +306,8 @@
    "name": "Pat Bryant",
    "pos": "WR",
    "team": "DEN",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "12508": {
    "name": "Jaxson Dart",
@@ -411,8 +404,8 @@
    "name": "Beaux Collins",
    "pos": "WR",
    "team": "ATL",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "13047": {
    "name": "Jacardia Wright",
@@ -453,8 +446,8 @@
    "name": "Jordyn Tyson",
    "pos": "WR",
    "team": "NO",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "13287": {
    "name": "Jeremiyah Love",
@@ -509,7 +502,7 @@
    "name": "Demond Claiborne",
    "pos": "RB",
    "team": "MIN",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "13353": {
@@ -673,13 +666,6 @@
    "injury_status": "Questionable",
    "status": "Active"
   },
-  "3286": {
-   "name": "Demarcus Robinson",
-   "pos": "WR",
-   "team": "SF",
-   "injury_status": "IR",
-   "status": "Inactive"
-  },
   "3702": {
    "name": "Andy Jones",
    "pos": "WR",
@@ -712,8 +698,8 @@
    "name": "Mack Hollins",
    "pos": "WR",
    "team": "NE",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "4219": {
    "name": "Jeremy McNichols",
@@ -761,15 +747,8 @@
    "name": "Christian Kirk",
    "pos": "WR",
    "team": "SF",
-   "injury_status": "Out",
-   "status": "Active"
-  },
-  "4983": {
-   "name": "DJ Moore",
-   "pos": "WR",
-   "team": "BUF",
-   "injury_status": "Questionable",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "5008": {
    "name": "Durham Smythe",
@@ -810,7 +789,7 @@
    "name": "Kyler Murray",
    "pos": "QB",
    "team": "MIN",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "5859": {
@@ -950,7 +929,7 @@
    "name": "Jauan Jennings",
    "pos": "WR",
    "team": "MIN",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "7083": {
@@ -1006,8 +985,8 @@
    "name": "Dyami Brown",
    "pos": "WR",
    "team": "WAS",
-   "injury_status": "Out",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "7593": {
    "name": "Trey Sermon",
@@ -1041,7 +1020,7 @@
    "name": "Joshua Palmer",
    "pos": "WR",
    "team": "BUF",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "7757": {
@@ -1086,13 +1065,6 @@
    "injury_status": "IR",
    "status": "Inactive"
   },
-  "8129": {
-   "name": "Dameon Pierce",
-   "pos": "RB",
-   "team": "PHI",
-   "injury_status": "Questionable",
-   "status": "Inactive"
-  },
   "8135": {
    "name": "Treylon Burks",
    "pos": "WR",
@@ -1125,8 +1097,8 @@
    "name": "Brian Robinson Jr.",
    "pos": "RB",
    "team": "ATL",
-   "injury_status": "Out",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "8168": {
    "name": "Skyy Moore",
@@ -1139,13 +1111,6 @@
    "name": "Tyquan Thornton",
    "pos": "WR",
    "team": "KC",
-   "injury_status": "IR",
-   "status": "Inactive"
-  },
-  "8195": {
-   "name": "Ronnie Rivers",
-   "pos": "RB",
-   "team": "LAR",
    "injury_status": "IR",
    "status": "Inactive"
   },
