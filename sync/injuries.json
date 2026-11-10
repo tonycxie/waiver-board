@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-09T08:05:51+00:00",
+ "fetched_at": "2026-11-10T08:29:27+00:00",
  "players": {
   "10212": {
    "name": "Josh Whyle",
@@ -35,6 +35,20 @@
    "team": "CIN",
    "injury_status": "IR",
    "status": "Inactive"
+  },
+  "10228": {
+   "name": "Charlie Jones",
+   "pos": "WR",
+   "team": "NYG",
+   "injury_status": "Questionable",
+   "status": "Active"
+  },
+  "10232": {
+   "name": "Michael Wilson",
+   "pos": "WR",
+   "team": "ARI",
+   "injury_status": "Out",
+   "status": "Active"
   },
   "10866": {
    "name": "Aidan O'Connell",
@@ -258,6 +272,13 @@
    "pos": "WR",
    "team": "NO",
    "injury_status": "PUP",
+   "status": "Active"
+  },
+  "11942": {
+   "name": "Colson Yankoff",
+   "pos": "TE",
+   "team": "WAS",
+   "injury_status": "Questionable",
    "status": "Active"
   },
   "11963": {
@@ -586,8 +607,8 @@
    "name": "Demond Claiborne",
    "pos": "RB",
    "team": "MIN",
-   "injury_status": "Out",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "13353": {
    "name": "Chris Brazzell II",
@@ -614,6 +635,13 @@
    "name": "Justin Joly",
    "pos": "TE",
    "team": "MIA",
+   "injury_status": "Out",
+   "status": "Active"
+  },
+  "13402": {
+   "name": "Skyler Bell",
+   "pos": "WR",
+   "team": "BUF",
    "injury_status": "Out",
    "status": "Active"
   },
@@ -943,7 +971,7 @@
    "name": "Josh Jacobs",
    "pos": "RB",
    "team": "GB",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "5854": {
@@ -1001,6 +1029,13 @@
    "team": "MIN",
    "injury_status": "IR",
    "status": "Inactive"
+  },
+  "6011": {
+   "name": "Gardner Minshew II",
+   "pos": "QB",
+   "team": "ARI",
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "6167": {
    "name": "Jordan Scarlett",
@@ -1121,6 +1156,13 @@
    "injury_status": "IR",
    "status": "Inactive"
   },
+  "7090": {
+   "name": "Darnell Mooney",
+   "pos": "WR",
+   "team": "NYG",
+   "injury_status": "Questionable",
+   "status": "Active"
+  },
   "7093": {
    "name": "Adrian Killins",
    "pos": "RB",
@@ -1223,8 +1265,8 @@
    "name": "Joshua Palmer",
    "pos": "WR",
    "team": "BUF",
-   "injury_status": "Out",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "7757": {
    "name": "Ben Skowronek",
@@ -1244,7 +1286,7 @@
    "name": "Jake Ferguson",
    "pos": "TE",
    "team": "DAL",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "8117": {
@@ -1310,6 +1352,13 @@
    "injury_status": "IR",
    "status": "Inactive"
   },
+  "8161": {
+   "name": "Malik Willis",
+   "pos": "QB",
+   "team": "MIA",
+   "injury_status": "Questionable",
+   "status": "Active"
+  },
   "8168": {
    "name": "Skyy Moore",
    "pos": "WR",
@@ -1349,7 +1398,7 @@
    "name": "Tyler Goodson",
    "pos": "RB",
    "team": "DAL",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "8208": {
@@ -1358,6 +1407,13 @@
    "team": "DEN",
    "injury_status": "IR",
    "status": "Inactive"
+  },
+  "8210": {
+   "name": "Chig Okonkwo",
+   "pos": "TE",
+   "team": "WAS",
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "8214": {
    "name": "Cole Turner",
@@ -1455,7 +1511,7 @@
    "pos": "WR",
    "team": "LAR",
    "injury_status": "Questionable",
-   "status": "Active"
+   "status": "Inactive"
   },
   "9508": {
    "name": "Tyjae Spears",
