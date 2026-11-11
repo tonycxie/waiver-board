@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-11T07:47:58+00:00",
+ "fetched_at": "2026-11-11T20:14:38+00:00",
  "leagues": {
   "1312106378013192192": {
    "name": "Seattle Seacucks",
@@ -919,6 +919,48 @@
     },
     {
      "week": 9,
+     "player_id": "GB",
+     "bid": 5,
+     "roster_id": 8,
+     "created": 1794370719338
+    },
+    {
+     "week": 9,
+     "player_id": "13297",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1794370485323
+    },
+    {
+     "week": 9,
+     "player_id": "12494",
+     "bid": 35,
+     "roster_id": 12,
+     "created": 1794352131601
+    },
+    {
+     "week": 9,
+     "player_id": "13272",
+     "bid": 23,
+     "roster_id": 2,
+     "created": 1794351922616
+    },
+    {
+     "week": 9,
+     "player_id": "13301",
+     "bid": 8,
+     "roster_id": 2,
+     "created": 1794335083742
+    },
+    {
+     "week": 9,
+     "player_id": "5995",
+     "bid": 5,
+     "roster_id": 8,
+     "created": 1794292298028
+    },
+    {
+     "week": 9,
      "player_id": "NO",
      "bid": 0,
      "roster_id": 11,
@@ -1014,6 +1056,20 @@
      "bid": 0,
      "roster_id": 7,
      "created": 1793801023958
+    },
+    {
+     "week": 10,
+     "player_id": "12718",
+     "bid": 11,
+     "roster_id": 7,
+     "created": 1794416630625
+    },
+    {
+     "week": 10,
+     "player_id": "BAL",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1794391447113
     }
    ]
   },
@@ -1729,6 +1785,27 @@
      "bid": 0,
      "roster_id": 5,
      "created": 1793190225405
+    },
+    {
+     "week": 9,
+     "player_id": "12494",
+     "bid": 36,
+     "roster_id": 5,
+     "created": 1794371758157
+    },
+    {
+     "week": 9,
+     "player_id": "11593",
+     "bid": 123,
+     "roster_id": 5,
+     "created": 1794335475585
+    },
+    {
+     "week": 9,
+     "player_id": "7562",
+     "bid": 250,
+     "roster_id": 9,
+     "created": 1794326794906
     },
     {
      "week": 9,
@@ -2486,6 +2563,27 @@
      "bid": 0,
      "roster_id": 5,
      "created": 1793228485458
+    },
+    {
+     "week": 9,
+     "player_id": "6803",
+     "bid": 111,
+     "roster_id": 9,
+     "created": 1794372845874
+    },
+    {
+     "week": 9,
+     "player_id": "12634",
+     "bid": 75,
+     "roster_id": 1,
+     "created": 1794362906140
+    },
+    {
+     "week": 9,
+     "player_id": "11579",
+     "bid": 150,
+     "roster_id": 5,
+     "created": 1794258143081
     },
     {
      "week": 9,
