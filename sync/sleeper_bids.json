@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-11T20:14:38+00:00",
+ "fetched_at": "2026-11-12T08:25:20+00:00",
  "leagues": {
   "1312106378013192192": {
    "name": "Seattle Seacucks",
@@ -1059,6 +1059,34 @@
     },
     {
      "week": 10,
+     "player_id": "13270",
+     "bid": 5,
+     "roster_id": 9,
+     "created": 1794442631068
+    },
+    {
+     "week": 10,
+     "player_id": "2505",
+     "bid": 0,
+     "roster_id": 1,
+     "created": 1794432527941
+    },
+    {
+     "week": 10,
+     "player_id": "7562",
+     "bid": 0,
+     "roster_id": 5,
+     "created": 1794421163502
+    },
+    {
+     "week": 10,
+     "player_id": "6427",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1794417142549
+    },
+    {
+     "week": 10,
      "player_id": "12718",
      "bid": 11,
      "roster_id": 7,
@@ -1855,6 +1883,20 @@
      "bid": 11,
      "roster_id": 1,
      "created": 1793837575578
+    },
+    {
+     "week": 10,
+     "player_id": "12482",
+     "bid": 0,
+     "roster_id": 2,
+     "created": 1794446733402
+    },
+    {
+     "week": 10,
+     "player_id": "10231",
+     "bid": 0,
+     "roster_id": 4,
+     "created": 1794391509376
     }
    ]
   },
@@ -2605,6 +2647,20 @@
      "bid": 365,
      "roster_id": 5,
      "created": 1793823268796
+    },
+    {
+     "week": 10,
+     "player_id": "12494",
+     "bid": 42,
+     "roster_id": 3,
+     "created": 1794391368417
+    },
+    {
+     "week": 10,
+     "player_id": "3286",
+     "bid": 0,
+     "roster_id": 3,
+     "created": 1794391296732
     }
    ]
   }
