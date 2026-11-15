@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-14T07:39:20+00:00",
+ "fetched_at": "2026-11-15T07:55:22+00:00",
  "players": {
   "10210": {
    "name": "Cameron Latu",
@@ -12,8 +12,8 @@
    "name": "Josh Whyle",
    "pos": "TE",
    "team": "GB",
-   "injury_status": "Out",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "10214": {
    "name": "Davis Allen",
@@ -26,7 +26,7 @@
    "name": "Will Mallory",
    "pos": "TE",
    "team": "IND",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "10222": {
@@ -89,8 +89,8 @@
    "name": "Chris Brooks",
    "pos": "RB",
    "team": "GB",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "11371": {
    "name": "Julian Hill",
@@ -173,8 +173,8 @@
    "name": "Xavier Legette",
    "pos": "WR",
    "team": "CAR",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "11628": {
    "name": "Marvin Harrison Jr.",
@@ -341,8 +341,8 @@
    "name": "TreVeyon Henderson",
    "pos": "RB",
    "team": "NE",
-   "injury_status": "Out",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "12533": {
    "name": "Jacory Croskey-Merritt",
@@ -427,6 +427,13 @@
    "team": "KC",
    "injury_status": "IR",
    "status": "Inactive"
+  },
+  "13200": {
+   "name": "Max Hurleman",
+   "pos": "WR",
+   "team": "PIT",
+   "injury_status": "Out",
+   "status": "Active"
   },
   "13276": {
    "name": "Omar Cooper Jr.",
@@ -523,7 +530,7 @@
    "name": "Brenen Thompson",
    "pos": "WR",
    "team": "LAC",
-   "injury_status": "Questionable",
+   "injury_status": "Doubtful",
    "status": "Active"
   },
   "13392": {
@@ -684,8 +691,8 @@
    "name": "Mo Alie-Cox",
    "pos": "TE",
    "team": "IND",
-   "injury_status": "Out",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "4137": {
    "name": "James Conner",
@@ -810,7 +817,7 @@
    "name": "David Montgomery",
    "pos": "RB",
    "team": "HOU",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "5927": {
@@ -957,8 +964,8 @@
    "name": "Reggie Gilliam",
    "pos": "RB",
    "team": "NE",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "7525": {
    "name": "DeVonta Smith",
@@ -978,15 +985,15 @@
    "name": "Hunter Long",
    "pos": "TE",
    "team": "ARI",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "7543": {
    "name": "Travis Etienne Jr.",
    "pos": "RB",
    "team": "NO",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "7547": {
    "name": "Amon-Ra St. Brown",
@@ -1035,6 +1042,13 @@
    "pos": "TE",
    "team": "ARI",
    "injury_status": "Out",
+   "status": "Active"
+  },
+  "7600": {
+   "name": "Pat Freiermuth",
+   "pos": "TE",
+   "team": "PIT",
+   "injury_status": "Questionable",
    "status": "Active"
   },
   "7610": {
@@ -1104,7 +1118,7 @@
    "name": "Kenneth Walker III",
    "pos": "RB",
    "team": "KC",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "8154": {
@@ -1125,8 +1139,8 @@
    "name": "Skyy Moore",
    "pos": "WR",
    "team": "GB",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "8188": {
    "name": "Tyquan Thornton",
@@ -1153,8 +1167,8 @@
    "name": "Tyler Goodson",
    "pos": "RB",
    "team": "DAL",
-   "injury_status": "Out",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "8208": {
    "name": "Tyler Badie",
@@ -1258,13 +1272,6 @@
    "name": "Tyjae Spears",
    "pos": "RB",
    "team": "TEN",
-   "injury_status": "Questionable",
-   "status": "Active"
-  },
-  "9511": {
-   "name": "Keaton Mitchell",
-   "pos": "RB",
-   "team": "LAC",
    "injury_status": "Questionable",
    "status": "Active"
   },
