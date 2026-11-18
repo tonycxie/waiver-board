@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-17T09:18:22+00:00",
+ "fetched_at": "2026-11-18T01:02:07+00:00",
  "players": {
   "10212": {
    "name": "Josh Whyle",
@@ -1300,8 +1300,8 @@
    "name": "Wan'Dale Robinson",
    "pos": "WR",
    "team": "TEN",
-   "injury_status": "Questionable",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "8142": {
    "name": "Alec Pierce",
