@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-19T08:52:31+00:00",
+ "fetched_at": "2026-11-20T08:39:19+00:00",
  "players": {
   "10212": {
    "name": "Josh Whyle",
@@ -63,6 +63,13 @@
    "team": "SEA",
    "injury_status": "IR",
    "status": "Inactive"
+  },
+  "10871": {
+   "name": "Luke Schoonmaker",
+   "pos": "TE",
+   "team": "DAL",
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "11034": {
    "name": "Jalen Brooks",
@@ -253,13 +260,6 @@
    "injury_status": "Questionable",
    "status": "Active"
   },
-  "11762": {
-   "name": "Anthony Gould",
-   "pos": "WR",
-   "team": "IND",
-   "injury_status": "Questionable",
-   "status": "Active"
-  },
   "11895": {
    "name": "Mason Tipton",
    "pos": "WR",
@@ -271,13 +271,6 @@
    "name": "Jeshaun Jones",
    "pos": "WR",
    "team": "MIN",
-   "injury_status": "Questionable",
-   "status": "Active"
-  },
-  "11942": {
-   "name": "Colson Yankoff",
-   "pos": "TE",
-   "team": "WAS",
    "injury_status": "Questionable",
    "status": "Active"
   },
@@ -315,6 +308,20 @@
    "team": "KC",
    "injury_status": "IR",
    "status": "Inactive"
+  },
+  "12467": {
+   "name": "Jordan James",
+   "pos": "RB",
+   "team": "SF",
+   "injury_status": "Questionable",
+   "status": "Active"
+  },
+  "12470": {
+   "name": "Riley Leonard",
+   "pos": "QB",
+   "team": "IND",
+   "injury_status": "Out",
+   "status": "Active"
   },
   "12472": {
    "name": "Raheim Sanders",
@@ -470,6 +477,13 @@
    "injury_status": "IR",
    "status": "Inactive"
   },
+  "13272": {
+   "name": "Carson Beck",
+   "pos": "QB",
+   "team": "ARI",
+   "injury_status": "Questionable",
+   "status": "Active"
+  },
   "13275": {
    "name": "Ty Simpson",
    "pos": "QB",
@@ -616,6 +630,13 @@
    "team": "TEN",
    "injury_status": "IR",
    "status": "Inactive"
+  },
+  "13424": {
+   "name": "Seth McGowan",
+   "pos": "RB",
+   "team": "IND",
+   "injury_status": "Out",
+   "status": "Active"
   },
   "13435": {
    "name": "Joe Royer",
@@ -988,13 +1009,6 @@
    "injury_status": null,
    "status": "Inactive"
   },
-  "7525": {
-   "name": "DeVonta Smith",
-   "pos": "WR",
-   "team": "PHI",
-   "injury_status": "Questionable",
-   "status": "Active"
-  },
   "7526": {
    "name": "Jaylen Waddle",
    "pos": "WR",
@@ -1287,7 +1301,14 @@
    "pos": "WR",
    "team": "LAR",
    "injury_status": "IR",
-   "status": "Inactive"
+   "status": "Active"
+  },
+  "9504": {
+   "name": "Kayshon Boutte",
+   "pos": "WR",
+   "team": "HOU",
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "9508": {
    "name": "Tyjae Spears",
