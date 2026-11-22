@@ -136,7 +136,7 @@
    "taxi": []
   },
   "3": {
-   "budget_used": 0,
+   "budget_used": 1,
    "players": [
     "10213",
     "11256",
@@ -565,7 +565,7 @@
    "taxi": []
   },
   "12": {
-   "budget_used": 400,
+   "budget_used": 399,
    "players": [
     "10236",
     "11565",
@@ -615,6 +615,6 @@
  },
  "season": "2026",
  "week": 11,
- "fetched_at": "2026-11-21T20:09:19+00:00",
+ "fetched_at": "2026-11-22T08:06:22+00:00",
  "source": "sleeper-sync"
 }

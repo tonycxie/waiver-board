@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-21T08:21:27+00:00",
+ "fetched_at": "2026-11-22T08:06:22+00:00",
  "players": {
   "10212": {
    "name": "Josh Whyle",
@@ -117,8 +117,8 @@
    "name": "Will Shipley",
    "pos": "RB",
    "team": "PHI",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "11583": {
    "name": "Jonathon Brooks",
@@ -194,8 +194,8 @@
    "name": "Roman Wilson",
    "pos": "WR",
    "team": "PIT",
-   "injury_status": "IR",
-   "status": "Inactive"
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "11635": {
    "name": "Ladd McConkey",
@@ -446,7 +446,7 @@
    "name": "Carson Beck",
    "pos": "QB",
    "team": "ARI",
-   "injury_status": "Questionable",
+   "injury_status": "Out",
    "status": "Active"
   },
   "13275": {
@@ -946,13 +946,6 @@
    "injury_status": "Questionable",
    "status": "Active"
   },
-  "7559": {
-   "name": "Ihmir Smith-Marsette",
-   "pos": "WR",
-   "team": "CAR",
-   "injury_status": "Questionable",
-   "status": "Active"
-  },
   "7568": {
    "name": "Brevin Jordan",
    "pos": "TE",
@@ -1051,13 +1044,6 @@
    "injury_status": "Questionable",
    "status": "Active"
   },
-  "8135": {
-   "name": "Treylon Burks",
-   "pos": "WR",
-   "team": "WAS",
-   "injury_status": "Questionable",
-   "status": "Active"
-  },
   "8136": {
    "name": "Rachaad White",
    "pos": "RB",
@@ -1071,6 +1057,13 @@
    "team": "IND",
    "injury_status": "IR",
    "status": "Inactive"
+  },
+  "8150": {
+   "name": "Kyren Williams",
+   "pos": "RB",
+   "team": "LAR",
+   "injury_status": "Questionable",
+   "status": "Active"
   },
   "8151": {
    "name": "Kenneth Walker III",
@@ -1216,15 +1209,15 @@
    "name": "Dontayvion Wicks",
    "pos": "WR",
    "team": "PHI",
-   "injury_status": "Out",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "9493": {
    "name": "Puka Nacua",
    "pos": "WR",
    "team": "LAR",
    "injury_status": "IR",
-   "status": "Active"
+   "status": "Inactive"
   },
   "9504": {
    "name": "Kayshon Boutte",
@@ -1237,8 +1230,8 @@
    "name": "Tyjae Spears",
    "pos": "RB",
    "team": "TEN",
-   "injury_status": "Questionable",
-   "status": "Active"
+   "injury_status": "IR",
+   "status": "Inactive"
   },
   "9756": {
    "name": "Jordan Addison",
