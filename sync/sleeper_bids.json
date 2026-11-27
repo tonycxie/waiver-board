@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-26T22:24:30+00:00",
+ "fetched_at": "2026-11-27T09:44:01+00:00",
  "leagues": {
   "1312106378013192192": {
    "name": "Seattle Seacucks",
@@ -1231,6 +1231,13 @@
      "bid": 0,
      "roster_id": 7,
      "created": 1795021873989
+    },
+    {
+     "week": 12,
+     "player_id": "JAX",
+     "bid": 0,
+     "roster_id": 7,
+     "created": 1795607420129
     }
    ]
   },
